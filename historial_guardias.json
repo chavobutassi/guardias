@@ -1,0 +1,742 @@
+[
+  {
+    "accion": "cambio_disponibilidad",
+    "persona": "TFIM GONZALEZ",
+    "activo": false,
+    "motivo": "Comsion Chipre",
+    "desde": null,
+    "hasta": null,
+    "timestamp": "2026-02-14T20:50:11.654249"
+  },
+  {
+    "accion": "cambio_disponibilidad",
+    "persona": "TFIM RACEDO BRITOS",
+    "activo": false,
+    "motivo": "Licencia Anual",
+    "desde": null,
+    "hasta": null,
+    "timestamp": "2026-02-14T20:50:22.226386"
+  },
+  {
+    "accion": "cambio_disponibilidad",
+    "persona": "GUIM TORRES",
+    "activo": false,
+    "motivo": "Puesto",
+    "desde": null,
+    "hasta": null,
+    "timestamp": "2026-02-14T20:50:33.250095"
+  },
+  {
+    "accion": "cambio_disponibilidad",
+    "persona": "GUIM TORRES",
+    "activo": true,
+    "motivo": null,
+    "desde": null,
+    "hasta": null,
+    "timestamp": "2026-02-14T21:08:28.865459"
+  },
+  {
+    "accion": "distribucion_automatica_completa",
+    "mes": "Febrero",
+    "cambios": 28,
+    "puntos_sistema": {
+      "habil": 1.0,
+      "vispera": 1.5,
+      "feriado": 2.0
+    },
+    "personas": [
+      "GUCO BENITEZ",
+      "GUIM DIAZ",
+      "GUIM TORRES",
+      "TC LEDESMA",
+      "TCCO PALMA",
+      "TF ONETO CAJAL",
+      "TF ZALAZAR",
+      "TFCO LEDESMA",
+      "TN MACHUCA",
+      "TNAU BARRIOS",
+      "TNIM BUTASSI"
+    ],
+    "timestamp": "2026-02-14T21:25:03.380721"
+  },
+  {
+    "accion": "cambio_disponibilidad",
+    "persona": "GUIM TORRES",
+    "activo": false,
+    "motivo": "",
+    "desde": null,
+    "hasta": null,
+    "timestamp": "2026-02-14T21:25:27.365001"
+  },
+  {
+    "accion": "cambio_disponibilidad",
+    "persona": "GUIM TORRES",
+    "activo": true,
+    "motivo": null,
+    "desde": null,
+    "hasta": null,
+    "timestamp": "2026-02-14T21:26:35.728765"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 1,
+    "antes": "GUCO BENITEZ",
+    "despues": "GUIM TORRES",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:26:43.558536"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 2,
+    "antes": "GUIM TORRES",
+    "despues": "GUIM DIAZ",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:26:54.678601"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 3,
+    "antes": "TC LEDESMA",
+    "despues": "TN MACHUCA",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:27:03.463360"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 4,
+    "antes": "TCCO PALMA",
+    "despues": "GUIM TORRES",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:27:16.727103"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 6,
+    "antes": "TNIM BUTASSI",
+    "despues": "GUIM TORRES",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:27:33.232426"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 7,
+    "antes": "GUIM DIAZ",
+    "despues": "TN MACHUCA",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:27:52.178510"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 8,
+    "antes": "GUIM TORRES",
+    "despues": "GUIM DIAZ",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:28:02.065283"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 9,
+    "antes": "TF ZALAZAR",
+    "despues": "TN MACHUCA",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:28:13.331787"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 10,
+    "antes": "TFCO LEDESMA",
+    "despues": "GUIM DIAZ",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:28:21.267834"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 12,
+    "antes": "TNAU BARRIOS",
+    "despues": "TF ONETO CAJAL",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:28:34.242907"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 13,
+    "antes": "TNIM BUTASSI",
+    "despues": "GUIM DIAZ",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:28:46.447889"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 14,
+    "antes": "TC LEDESMA",
+    "despues": "TFCO LEDESMA",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:29:05.880974"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 14,
+    "antes": "TFCO LEDESMA",
+    "despues": "TF ONETO CAJAL",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:29:51.673353"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 15,
+    "antes": "TCCO PALMA",
+    "despues": "TFCO LEDESMA",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:30:01.534927"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 16,
+    "antes": "TF ONETO CAJAL",
+    "despues": "TC LEDESMA",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:30:19.065700"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 17,
+    "antes": "TF ZALAZAR",
+    "despues": "TCCO PALMA",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:30:46.554833"
+  },
+  {
+    "accion": "cambio_disponibilidad",
+    "persona": "GUIM TORRES",
+    "activo": false,
+    "motivo": "puesto",
+    "desde": "2026-02-10",
+    "hasta": "2026-03-29",
+    "timestamp": "2026-02-14T21:37:57.650144"
+  },
+  {
+    "accion": "cambio_disponibilidad",
+    "persona": "TFIM GONZALEZ",
+    "activo": false,
+    "motivo": "Comsion Chipre",
+    "desde": "2026-01-25",
+    "hasta": "2026-09-27",
+    "timestamp": "2026-02-14T21:38:28.719155"
+  },
+  {
+    "accion": "cambio_disponibilidad",
+    "persona": "TFIM RACEDO BRITOS",
+    "activo": false,
+    "motivo": "Licencia Anual",
+    "desde": null,
+    "hasta": "2026-02-22",
+    "timestamp": "2026-02-14T21:38:46.715747"
+  },
+  {
+    "accion": "distribucion_automatica_completa",
+    "mes": "Febrero",
+    "cambios": 28,
+    "puntos_sistema": {
+      "habil": 1.0,
+      "vispera": 1.5,
+      "feriado": 2.0
+    },
+    "personas": [
+      "GUCO BENITEZ",
+      "GUIM DIAZ",
+      "GUIM TORRES",
+      "TC LEDESMA",
+      "TCCO PALMA",
+      "TF ONETO CAJAL",
+      "TF ZALAZAR",
+      "TFCO LEDESMA",
+      "TFIM RACEDO BRITOS",
+      "TN MACHUCA",
+      "TNAU BARRIOS",
+      "TNIM BUTASSI"
+    ],
+    "timestamp": "2026-02-14T21:39:10.787194"
+  },
+  {
+    "accion": "cambio_disponibilidad",
+    "persona": "TFIM RACEDO BRITOS",
+    "activo": false,
+    "motivo": "Licencia Anual",
+    "desde": null,
+    "hasta": "2026-02-28",
+    "timestamp": "2026-02-14T21:40:03.195170"
+  },
+  {
+    "accion": "distribucion_automatica_completa",
+    "mes": "Febrero",
+    "cambios": 28,
+    "puntos_sistema": {
+      "habil": 1.0,
+      "vispera": 1.5,
+      "feriado": 2.0
+    },
+    "personas": [
+      "GUCO BENITEZ",
+      "GUIM DIAZ",
+      "GUIM TORRES",
+      "TC LEDESMA",
+      "TCCO PALMA",
+      "TF ONETO CAJAL",
+      "TF ZALAZAR",
+      "TFCO LEDESMA",
+      "TN MACHUCA",
+      "TNAU BARRIOS",
+      "TNIM BUTASSI"
+    ],
+    "timestamp": "2026-02-14T21:40:15.005286"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 1,
+    "antes": "GUCO BENITEZ",
+    "despues": "GUIM TORRES",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:54:52.898076"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 2,
+    "antes": "GUIM TORRES",
+    "despues": "GUIM DIAZ",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:55:00.877166"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 3,
+    "antes": "TC LEDESMA",
+    "despues": "TN MACHUCA",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:55:07.971536"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 4,
+    "antes": "TCCO PALMA",
+    "despues": "GUIM TORRES",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:55:16.108744"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 6,
+    "antes": "TNIM BUTASSI",
+    "despues": "GUIM TORRES",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:55:25.707337"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 7,
+    "antes": "GUIM DIAZ",
+    "despues": "TN MACHUCA",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:55:33.737668"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 8,
+    "antes": "GUIM TORRES",
+    "despues": "GUIM DIAZ",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:55:43.357937"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 9,
+    "antes": "TF ZALAZAR",
+    "despues": "TN MACHUCA",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:55:50.353299"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 10,
+    "antes": "TFCO LEDESMA",
+    "despues": "GUIM DIAZ",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:55:58.800861"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 12,
+    "antes": "TNAU BARRIOS",
+    "despues": "TF ONETO CAJAL",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:56:11.802127"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 13,
+    "antes": "TNIM BUTASSI",
+    "despues": "GUIM DIAZ",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:56:20.145677"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 14,
+    "antes": "TC LEDESMA",
+    "despues": "TF ONETO CAJAL",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:56:32.165301"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 15,
+    "antes": "TCCO PALMA",
+    "despues": "TFCO LEDESMA",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:56:44.065636"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 16,
+    "antes": "TF ONETO CAJAL",
+    "despues": "TCCO PALMA",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:57:02.300724"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 17,
+    "antes": "TF ZALAZAR",
+    "despues": "TCCO PALMA",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:57:17.557114"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 16,
+    "antes": "TCCO PALMA",
+    "despues": "TC LEDESMA",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:57:27.597314"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 18,
+    "antes": "TC LEDESMA",
+    "despues": "TC LEDESMA",
+    "forzado": false,
+    "timestamp": "2026-02-14T21:59:40.156640"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 19,
+    "antes": "TCCO PALMA",
+    "despues": "TCCO PALMA",
+    "forzado": false,
+    "timestamp": "2026-02-14T22:00:12.114073"
+  },
+  {
+    "accion": "eliminar",
+    "mes": "Febrero",
+    "dia": 18,
+    "persona": "TC LEDESMA",
+    "timestamp": "2026-02-14T23:05:02.353642"
+  },
+  {
+    "accion": "eliminar",
+    "mes": "Febrero",
+    "dia": 19,
+    "persona": "TCCO PALMA",
+    "timestamp": "2026-02-14T23:05:12.254007"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 20,
+    "antes": "GUCO BENITEZ",
+    "despues": "GUCO BENITEZ",
+    "forzado": false,
+    "timestamp": "2026-02-14T23:05:20.604408"
+  },
+  {
+    "accion": "eliminar",
+    "mes": "Febrero",
+    "dia": 20,
+    "persona": "GUCO BENITEZ",
+    "timestamp": "2026-02-14T23:05:26.592248"
+  },
+  {
+    "accion": "eliminar",
+    "mes": "Febrero",
+    "dia": 21,
+    "persona": "TFCO LEDESMA",
+    "timestamp": "2026-02-14T23:05:33.755993"
+  },
+  {
+    "accion": "eliminar",
+    "mes": "Febrero",
+    "dia": 22,
+    "persona": "TN MACHUCA",
+    "timestamp": "2026-02-14T23:05:40.824155"
+  },
+  {
+    "accion": "eliminar",
+    "mes": "Febrero",
+    "dia": 23,
+    "persona": "TF ONETO CAJAL",
+    "timestamp": "2026-02-14T23:05:48.136983"
+  },
+  {
+    "accion": "eliminar",
+    "mes": "Febrero",
+    "dia": 24,
+    "persona": "TF ZALAZAR",
+    "timestamp": "2026-02-14T23:05:55.187060"
+  },
+  {
+    "accion": "eliminar",
+    "mes": "Febrero",
+    "dia": 25,
+    "persona": "TFCO LEDESMA",
+    "timestamp": "2026-02-14T23:06:01.877549"
+  },
+  {
+    "accion": "eliminar",
+    "mes": "Febrero",
+    "dia": 26,
+    "persona": "TN MACHUCA",
+    "timestamp": "2026-02-14T23:06:12.824923"
+  },
+  {
+    "accion": "eliminar",
+    "mes": "Febrero",
+    "dia": 27,
+    "persona": "GUIM DIAZ",
+    "timestamp": "2026-02-14T23:06:20.038949"
+  },
+  {
+    "accion": "eliminar",
+    "mes": "Febrero",
+    "dia": 28,
+    "persona": "TNAU BARRIOS",
+    "timestamp": "2026-02-14T23:06:25.798487"
+  },
+  {
+    "accion": "distribucion_balanceada",
+    "mes": "Febrero",
+    "cambios": 11,
+    "diferencia_final": 2.5,
+    "timestamp": "2026-02-14T23:14:42.646216"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 21,
+    "antes": "GUCO BENITEZ",
+    "despues": "TF ZALAZAR",
+    "forzado": false,
+    "timestamp": "2026-02-14T23:15:57.303876"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 22,
+    "antes": "TF ZALAZAR",
+    "despues": "GUCO BENITEZ",
+    "forzado": false,
+    "timestamp": "2026-02-14T23:16:05.594090"
+  },
+  {
+    "accion": "cambio_disponibilidad",
+    "persona": "TNIM BUTASSI",
+    "activo": false,
+    "motivo": "CAMPAÑA",
+    "desde": "2026-03-02",
+    "hasta": "2026-03-09",
+    "timestamp": "2026-02-14T23:20:07.416140"
+  },
+  {
+    "accion": "distribucion_balanceada",
+    "mes": "Marzo",
+    "cambios": 31,
+    "diferencia_final": 2.0,
+    "timestamp": "2026-02-14T23:20:33.182517"
+  },
+  {
+    "accion": "cambio_disponibilidad",
+    "persona": "GUIM DIAZ",
+    "activo": true,
+    "motivo": null,
+    "desde": null,
+    "hasta": null,
+    "timestamp": "2026-02-14T23:21:44.745589"
+  },
+  {
+    "accion": "cambio_disponibilidad",
+    "persona": "GUIM DIAZ",
+    "activo": false,
+    "motivo": "CampaÑa",
+    "desde": "2026-03-02",
+    "hasta": "2026-03-09",
+    "timestamp": "2026-02-14T23:23:55.272969"
+  },
+  {
+    "accion": "distribucion_balanceada",
+    "mes": "Marzo",
+    "cambios": 0,
+    "diferencia_final": 2.0,
+    "timestamp": "2026-02-14T23:24:07.492531"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 25,
+    "antes": "TFCO LEDESMA",
+    "despues": "GUCO BENITEZ",
+    "forzado": false,
+    "timestamp": "2026-02-14T23:25:12.761118"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 18,
+    "antes": "GUCO BENITEZ",
+    "despues": "TFCO LEDESMA",
+    "forzado": false,
+    "timestamp": "2026-02-14T23:25:21.387831"
+  },
+  {
+    "accion": "cambio_disponibilidad",
+    "persona": "GUIM DIAZ",
+    "activo": true,
+    "motivo": null,
+    "desde": null,
+    "hasta": null,
+    "timestamp": "2026-02-14T23:35:45.245177"
+  },
+  {
+    "accion": "cambio_disponibilidad",
+    "persona": "GUIM DIAZ",
+    "activo": true,
+    "motivo": null,
+    "desde": null,
+    "hasta": null,
+    "timestamp": "2026-02-14T23:35:55.402015"
+  },
+  {
+    "accion": "resetear_mes",
+    "mes": "Marzo",
+    "asignaciones_eliminadas": 31,
+    "personas_afectadas": [
+      "TNAU BARRIOS",
+      "TF ONETO CAJAL",
+      "TN MACHUCA",
+      "GUIM DIAZ",
+      "TFCO LEDESMA",
+      "TNIM BUTASSI",
+      "TF ZALAZAR",
+      "TFIM RACEDO BRITOS",
+      "GUIM TORRES",
+      "TC LEDESMA",
+      "GUCO BENITEZ",
+      "TCCO PALMA"
+    ],
+    "timestamp": "2026-02-14T23:42:17.335285"
+  },
+  {
+    "accion": "cambio_disponibilidad",
+    "persona": "TFIM RACEDO BRITOS",
+    "activo": false,
+    "motivo": "Licencia Anual",
+    "desde": null,
+    "hasta": "2026-03-09",
+    "timestamp": "2026-02-14T23:43:17.684687"
+  },
+  {
+    "accion": "cambio_disponibilidad",
+    "persona": "GUIM DIAZ",
+    "activo": false,
+    "motivo": "campana",
+    "desde": "2026-02-02",
+    "hasta": "2026-02-09",
+    "timestamp": "2026-02-14T23:44:46.803326"
+  },
+  {
+    "accion": "distribucion_balanceada",
+    "mes": "Marzo",
+    "cambios": 31,
+    "diferencia_final": 2.0,
+    "timestamp": "2026-02-14T23:45:48.653908"
+  },
+  {
+    "accion": "resetear_mes",
+    "mes": "Marzo",
+    "asignaciones_eliminadas": 31,
+    "personas_afectadas": [
+      "TF ZALAZAR",
+      "TF ONETO CAJAL",
+      "TFIM RACEDO BRITOS",
+      "GUIM TORRES",
+      "GUCO BENITEZ",
+      "TNIM BUTASSI",
+      "TNAU BARRIOS",
+      "TCCO PALMA",
+      "TFCO LEDESMA",
+      "TC LEDESMA",
+      "GUIM DIAZ",
+      "TN MACHUCA"
+    ],
+    "timestamp": "2026-02-15T00:14:17.284876"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 25,
+    "antes": "GUCO BENITEZ",
+    "despues": "TNAU BARRIOS",
+    "forzado": false,
+    "timestamp": "2026-02-15T00:18:04.947167"
+  },
+  {
+    "accion": "asignar",
+    "mes": "Febrero",
+    "dia": 26,
+    "antes": "TNAU BARRIOS",
+    "despues": "GUCO BENITEZ",
+    "forzado": false,
+    "timestamp": "2026-02-15T00:18:15.643654"
+  }
+]

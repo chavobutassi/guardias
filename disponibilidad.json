@@ -1,0 +1,80 @@
+{
+  "TNIM BUTASSI": {
+    "activo": false,
+    "motivo": "CAMPAÑA",
+    "desde": "2026-03-02",
+    "hasta": "2026-03-09"
+  },
+  "TN MACHUCA": {
+    "activo": true,
+    "motivo": null,
+    "desde": null,
+    "hasta": null
+  },
+  "TNAU BARRIOS": {
+    "activo": true,
+    "motivo": null,
+    "desde": null,
+    "hasta": null
+  },
+  "TF ONETO CAJAL": {
+    "activo": true,
+    "motivo": null,
+    "desde": null,
+    "hasta": null
+  },
+  "TFCO LEDESMA": {
+    "activo": true,
+    "motivo": null,
+    "desde": null,
+    "hasta": null
+  },
+  "TFIM GONZALEZ": {
+    "activo": false,
+    "motivo": "Comsion Chipre",
+    "desde": "2026-01-25",
+    "hasta": "2026-09-27"
+  },
+  "TFIM RACEDO BRITOS": {
+    "activo": false,
+    "motivo": "Licencia Anual",
+    "desde": null,
+    "hasta": "2026-03-09"
+  },
+  "TF ZALAZAR": {
+    "activo": true,
+    "motivo": null,
+    "desde": null,
+    "hasta": null
+  },
+  "TCCO PALMA": {
+    "activo": true,
+    "motivo": null,
+    "desde": null,
+    "hasta": null
+  },
+  "TC LEDESMA": {
+    "activo": true,
+    "motivo": null,
+    "desde": null,
+    "hasta": null
+  },
+  "GUIM DIAZ": {
+    "activo": false,
+    "motivo": "campana",
+    "desde": "2026-02-02",
+    "hasta": "2026-02-09"
+  },
+  "GUIM TORRES": {
+    "activo": false,
+    "motivo": "puesto",
+    "desde": "2026-02-10",
+    "hasta": "2026-03-29"
+  },
+  "GUCO BENITEZ": {
+    "activo": true,
+    "motivo": null,
+    "desde": null,
+    "hasta": null
+  }
+}

@@ -1,0 +1,2619 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📅 Gestor de Guardias 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #2563eb;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-danger: #ef4444;
+            --color-info: #3b82f6;
+            --color-dark: #1f2937;
+            --color-light: #f3f4f6;
+            --color-border: #e5e7eb;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: var(--color-dark);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: var(--color-primary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card h3 {
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-dark);
+        }
+
+        .stat-card .icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            height: fit-content;
+        }
+
+        .sidebar h2 {
+            color: var(--color-dark);
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--color-light);
+        }
+
+        .mes-btn {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 8px;
+            border: 2px solid var(--color-border);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .mes-btn:hover {
+            background: var(--color-light);
+            border-color: var(--color-primary);
+        }
+
+        .mes-btn.active {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        /* Calendar View */
+        .calendar-view {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--color-light);
+        }
+
+        .calendar-header h2 {
+            color: var(--color-dark);
+            font-size: 2rem;
+        }
+
+        .calendar-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-success {
+            background: var(--color-success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-warning {
+            background: var(--color-warning);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--color-danger);
+            color: white;
+        }
+
+        /* Calendar Grid */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .day-card {
+            background: white;
+            border: 2px solid var(--color-border);
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: 120px;
+        }
+
+        .day-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .day-card.habil {
+            border-color: #93c5fd;
+            background: #eff6ff;
+        }
+
+        .day-card.vispera {
+            border-color: #fcd34d;
+            background: #fef3c7;
+        }
+
+        .day-card.feriado {
+            border-color: #fca5a5;
+            background: #fee2e2;
+        }
+
+        .day-card.asignado {
+            border-width: 3px;
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .day-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-dark);
+        }
+
+        .day-type {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .day-type.habil {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .day-type.vispera {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .day-type.feriado {
+            background: #ef4444;
+            color: white;
+        }
+
+        .day-weekday {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .day-persona {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--color-dark);
+            padding: 8px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 6px;
+            margin-top: 8px;
+        }
+
+        .day-persona.conflicto {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fca5a5;
+        }
+
+        .day-vacio {
+            color: #9ca3af;
+            font-style: italic;
+            font-size: 0.85rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--color-light);
+        }
+
+        .modal-header h3 {
+            font-size: 1.5rem;
+            color: var(--color-dark);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .close-btn:hover {
+            color: var(--color-danger);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--color-dark);
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid var(--color-success);
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid var(--color-danger);
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border-left: 4px solid var(--color-warning);
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border-left: 4px solid var(--color-info);
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+
+        .spinner {
+            border: 4px solid var(--color-light);
+            border-top: 4px solid var(--color-primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Personas Management */
+        .personas-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid var(--color-light);
+        }
+
+        .persona-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            background: var(--color-light);
+        }
+
+        .persona-item.activo {
+            background: #d1fae5;
+        }
+
+        .persona-item.inactivo {
+            background: #fee2e2;
+            opacity: 0.7;
+        }
+
+        .persona-status {
+            font-size: 0.75rem;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .persona-status.activo {
+            background: var(--color-success);
+            color: white;
+        }
+
+        .persona-status.inactivo {
+            background: var(--color-danger);
+            color: white;
+        }
+
+        /* Sugerencia Badge */
+        .sugerencia-badge {
+            background: #dcfce7;
+            color: #166534;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        /* User Selector Slider */
+        .user-selector {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .user-selector h3 {
+            color: var(--color-dark);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .user-selector-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .user-card {
+            padding: 12px 15px;
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-card:hover {
+            border-color: var(--color-primary);
+            background: #eff6ff;
+        }
+
+        .user-card.selected {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        .user-card.inactive {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f3f4f6;
+        }
+
+        .user-card-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-card-stats {
+            font-size: 0.75rem;
+            display: flex;
+            gap: 8px;
+        }
+
+        .stat-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .user-card.selected .stat-badge {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .stats-summary {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .stats-summary.show {
+            display: block;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .stats-row:last-child {
+            border-bottom: none;
+        }
+
+        .stats-label {
+            font-weight: 600;
+            color: #6b7280;
+        }
+
+        .stats-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-dark);
+        }
+
+        /* Auto-assign mode */
+        .day-card.auto-assign-mode {
+            cursor: pointer;
+        }
+
+        .day-card.auto-assign-mode:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .day-card.can-assign {
+            border-color: var(--color-success);
+            border-width: 3px;
+        }
+
+        .day-card.cannot-assign {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .assign-indicator {
+            background: var(--color-success);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-success), var(--color-primary));
+            transition: width 0.3s;
+        }
+
+        /* Tablas de Cómputo */
+        .computo-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        .computo-table thead {
+            background: var(--color-dark);
+            color: white;
+        }
+
+        .computo-table th {
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #374151;
+        }
+
+        .computo-table td {
+            padding: 10px 8px;
+            border: 1px solid var(--color-border);
+        }
+
+        .computo-table tbody tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        .computo-table tbody tr:hover {
+            background: #eff6ff;
+        }
+
+        .computo-table .text-center {
+            text-align: center;
+        }
+
+        .computo-table .text-right {
+            text-align: right;
+        }
+
+        .computo-table .total-row {
+            background: #fef3c7 !important;
+            font-weight: 700;
+            border-top: 3px solid #f59e0b;
+        }
+
+        .computo-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .badge-habil {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-vispera {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-feriado {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-total {
+            background: #f3f4f6;
+            color: #1f2937;
+            font-size: 1rem;
+        }
+
+        .badge-puntos {
+            background: #e0e7ff;
+            color: #3730a3;
+            font-size: 0.95rem;
+        }
+
+        .computo-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .summary-card {
+            background: white;
+            border: 2px solid var(--color-border);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .summary-card h4 {
+            color: #6b7280;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .summary-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-dark);
+        }
+
+        .summary-card .subtitle {
+            font-size: 0.8rem;
+            color: #9ca3af;
+            margin-top: 5px;
+        }
+
+        .ranking-position {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .ranking-1 {
+            background: #fef3c7;
+            color: #92400e;
+            border: 2px solid #f59e0b;
+        }
+
+        .ranking-2 {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .ranking-3 {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .mes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .mes-card {
+            background: white;
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .mes-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .mes-card h5 {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+
+        .mes-card .dias {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📅 Gestor de Guardias 2026</h1>
+            <p>Sistema Inteligente de Gestión de Guardias</p>
+            <span class="version-badge">v4.0 - Con Generador Integrado</span>
+        </div>
+
+        <!-- Alert Box -->
+        <div id="alertBox" class="alert"></div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="icon">📊</div>
+                <h3>Total Días</h3>
+                <div class="value" id="statTotalDias">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">✅</div>
+                <h3>Asignados</h3>
+                <div class="value" id="statAsignados">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">⏳</div>
+                <h3>Pendientes</h3>
+                <div class="value" id="statPendientes">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">👥</div>
+                <h3>Personas Activas</h3>
+                <div class="value" id="statPersonasActivas">-</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <h2>📆 Meses</h2>
+                <div id="mesesList"></div>
+
+                <div class="personas-section">
+                    <h2>👥 Personas</h2>
+                    <div id="personasList"></div>
+                </div>
+            </div>
+
+            <!-- Calendar View -->
+            <div class="calendar-view">
+                <div class="calendar-header">
+                    <h2 id="mesActual">Selecciona un mes</h2>
+                    <div class="calendar-controls">
+                        <button class="btn btn-primary" onclick="mostrarComputoMensual()" id="btnComputoMensual" style="display: none;">
+                            📊 Cómputo Mensual
+                        </button>
+                        <button class="btn btn-warning" onclick="mostrarComputoAnual()">
+                            📈 Cómputo Anual
+                        </button>
+                        <button class="btn btn-danger" onclick="resetearMes()" id="btnResetearMes" style="display: none;">
+                            🗑️ Resetear Mes
+                        </button>
+                        <button class="btn btn-success" onclick="descargarExcel()">
+                            📥 Descargar Excel
+                        </button>
+                        <button class="btn btn-primary" onclick="mostrarGestionPersonas()">
+                            ⚙️ Gestionar Personas
+                        </button>
+                    </div>
+                </div>
+
+                <!-- User Selector -->
+                <div class="user-selector" id="userSelector" style="display: none;">
+                    <h3>👤 Cuotas Mensuales - <span id="cuotasMesNombre"></span></h3>
+                    <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 15px;">
+                        Estas son las cuotas sugeridas para este mes. Asigna manualmente los días según estas cantidades.
+                    </p>
+                    <div class="user-selector-grid" id="userSelectorGrid"></div>
+                    
+                    <div class="user-actions">
+                        <button class="btn btn-primary" onclick="calcularCuotas()" id="btnCalcularCuotas">
+                            🧮 Calcular Guardias del Mes
+                        </button>
+                        <button class="btn btn-success" onclick="distribucionBalanceada()" id="btnDistribuirPendientes">
+                            ⚖️ Distribuir Días Pendientes
+                        </button>
+                    </div>
+
+                    <div class="stats-summary" id="userStats">
+                        <h4 style="margin-bottom: 10px; color: var(--color-dark);">📊 Tus asignaciones en <span id="statsUserName"></span></h4>
+                        <div class="stats-row">
+                            <span class="stats-label">Total de días:</span>
+                            <span class="stats-value" id="statsTotal">0</span>
+                        </div>
+                        <div class="stats-row">
+                            <span class="stats-label">Días hábiles:</span>
+                            <span class="stats-value" id="statsHabil" style="color: #3b82f6;">0</span>
+                        </div>
+                        <div class="stats-row">
+                            <span class="stats-label">Vísperas:</span>
+                            <span class="stats-value" id="statsVispera" style="color: #f59e0b;">0</span>
+                        </div>
+                        <div class="stats-row">
+                            <span class="stats-label">Feriados:</span>
+                            <span class="stats-value" id="statsFeriado" style="color: #ef4444;">0</span>
+                        </div>
+                        <div class="stats-row">
+                            <span class="stats-label">Este mes:</span>
+                            <span class="stats-value" id="statsMesActual">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box" id="mesInfo" style="display: none;">
+                    <p><strong>Total días:</strong> <span id="infoTotalDias">-</span></p>
+                    <p><strong>Asignados:</strong> <span id="infoAsignados">-</span> | <strong>Pendientes:</strong> <span id="infoPendientes">-</span></p>
+                    <p><strong>Conflictos:</strong> <span id="infoConflictos">-</span></p>
+                </div>
+
+                <div id="calendarGrid" class="calendar-grid">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Selecciona un mes para comenzar</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Asignar Guardia -->
+    <div id="modalAsignar" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Asignar Guardia</h3>
+                <button class="close-btn" onclick="cerrarModal('modalAsignar')">&times;</button>
+            </div>
+
+            <div class="info-box">
+                <p><strong>Día:</strong> <span id="modalDia">-</span></p>
+                <p><strong>Fecha:</strong> <span id="modalFecha">-</span></p>
+                <p><strong>Tipo:</strong> <span id="modalTipo">-</span></p>
+            </div>
+
+            <div class="form-group">
+                <label>Persona Asignada</label>
+                <select id="modalPersonaSelect"></select>
+            </div>
+
+            <div id="modalSugerencia" style="display: none;">
+                <span class="sugerencia-badge">💡 Sugerencia: <span id="sugerenciaTexto"></span></span>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-danger" onclick="eliminarGuardia()" id="btnEliminar" style="display: none;">
+                    🗑️ Eliminar
+                </button>
+                <button class="btn btn-success" onclick="guardarAsignacion()">
+                    ✅ Guardar
+                </button>
+                <button class="btn btn-primary" onclick="cerrarModal('modalAsignar')">
+                    ❌ Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Gestión de Personas -->
+    <div id="modalPersonas" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Gestionar Disponibilidad</h3>
+                <button class="close-btn" onclick="cerrarModal('modalPersonas')">&times;</button>
+            </div>
+
+            <div id="gestionPersonasList"></div>
+        </div>
+    </div>
+
+    <!-- Modal Cómputo Mensual -->
+    <div id="modalComputoMensual" class="modal">
+        <div class="modal-content" style="max-width: 1000px;">
+            <div class="modal-header">
+                <h3>📊 Cómputo Mensual - <span id="computoMesNombre"></span></h3>
+                <button class="close-btn" onclick="cerrarModal('modalComputoMensual')">&times;</button>
+            </div>
+
+            <div id="computoMensualContent"></div>
+        </div>
+    </div>
+
+    <!-- Modal Cómputo Anual -->
+    <div id="modalComputoAnual" class="modal">
+        <div class="modal-content" style="max-width: 1200px;">
+            <div class="modal-header">
+                <h3>📈 Cómputo Anual 2026 - Resumen Completo</h3>
+                <button class="close-btn" onclick="cerrarModal('modalComputoAnual')">&times;</button>
+            </div>
+
+            <div id="computoAnualContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let mesActual = null;
+        let diasMes = {};
+        let personasDisponibilidad = {};
+        let diaSeleccionado = null;
+        let usuarioSeleccionado = null;
+        let estadisticasUsuarios = {};
+
+        // Inicializar aplicación
+        async function init() {
+            console.log('🚀 Iniciando aplicación...');
+            
+            try {
+                console.log('1️⃣ Cargando información general...');
+                await cargarInfo();
+                
+                console.log('2️⃣ Cargando meses disponibles...');
+                await cargarMeses();
+                
+                console.log('3️⃣ Cargando personas...');
+                await cargarPersonas();
+                
+                console.log('4️⃣ Cargando disponibilidad...');
+                await cargarDisponibilidad();
+                
+                console.log('✅ Aplicación inicializada correctamente');
+            } catch (error) {
+                console.error('❌ Error al inicializar:', error);
+                mostrarAlerta('Error al inicializar la aplicación: ' + error.message, 'error');
+            }
+        }
+
+        // Cargar información general
+        async function cargarInfo() {
+            try {
+                console.log('   📡 Llamando a /api/info...');
+                const response = await fetch('/api/info');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('   ✓ Datos recibidos de /api/info:', data);
+                
+                // Actualizar estadísticas del dashboard
+                const elemPersonas = document.getElementById('statPersonasActivas');
+                if (elemPersonas) {
+                    elemPersonas.textContent = data.total_activas || '0';
+                    console.log('   ✓ Personas activas actualizadas:', data.total_activas);
+                } else {
+                    console.error('   ❌ Elemento #statPersonasActivas no encontrado');
+                }
+                
+                // Cargar estadísticas generales
+                console.log('   📡 Cargando estadísticas generales...');
+                await cargarEstadisticasGenerales();
+            } catch (error) {
+                console.error('   ❌ Error cargando info:', error);
+                // Establecer valores por defecto
+                const elemPersonas = document.getElementById('statPersonasActivas');
+                if (elemPersonas) elemPersonas.textContent = '-';
+                throw error;
+            }
+        }
+        
+        // Cargar estadísticas generales del año
+        async function cargarEstadisticasGenerales() {
+            try {
+                console.log('      📡 Llamando a /api/reporte/anual...');
+                const response = await fetch('/api/reporte/anual');
+                
+                if (!response.ok) {
+                    console.warn('      ⚠️ /api/reporte/anual falló:', response.status);
+                    // Usar valores por defecto
+                    setEstadisticasPorDefecto();
+                    return;
+                }
+                
+                const data = await response.json();
+                console.log('      ✓ Datos recibidos de /api/reporte/anual:', data);
+                
+                if (data.totales) {
+                    const elemTotal = document.getElementById('statTotalDias');
+                    const elemAsignados = document.getElementById('statAsignados');
+                    const elemPendientes = document.getElementById('statPendientes');
+                    
+                    if (elemTotal) {
+                        elemTotal.textContent = data.totales.dias_totales || '0';
+                        console.log('      ✓ Total días:', data.totales.dias_totales);
+                    }
+                    if (elemAsignados) {
+                        elemAsignados.textContent = data.totales.dias_asignados || '0';
+                        console.log('      ✓ Asignados:', data.totales.dias_asignados);
+                    }
+                    if (elemPendientes) {
+                        elemPendientes.textContent = data.totales.dias_pendientes || '0';
+                        console.log('      ✓ Pendientes:', data.totales.dias_pendientes);
+                    }
+                } else {
+                    console.warn('      ⚠️ No hay datos.totales, usando valores por defecto');
+                    setEstadisticasPorDefecto();
+                }
+            } catch (error) {
+                console.error('      ❌ Error cargando estadísticas generales:', error);
+                setEstadisticasPorDefecto();
+            }
+        }
+        
+        // Establecer valores por defecto
+        function setEstadisticasPorDefecto() {
+            const elemTotal = document.getElementById('statTotalDias');
+            const elemAsignados = document.getElementById('statAsignados');
+            const elemPendientes = document.getElementById('statPendientes');
+            
+            if (elemTotal) elemTotal.textContent = '365';
+            if (elemAsignados) elemAsignados.textContent = '0';
+            if (elemPendientes) elemPendientes.textContent = '365';
+            
+            console.log('      ℹ️ Valores por defecto establecidos');
+        }
+
+        // Cargar meses disponibles
+        async function cargarMeses() {
+            try {
+                const response = await fetch('/api/calendario');
+                const data = await response.json();
+                
+                const mesesList = document.getElementById('mesesList');
+                mesesList.innerHTML = '';
+                
+                data.meses.forEach(mes => {
+                    const btn = document.createElement('button');
+                    btn.className = 'mes-btn';
+                    btn.textContent = mes;
+                    btn.onclick = () => cargarMes(mes);
+                    mesesList.appendChild(btn);
+                });
+            } catch (error) {
+                console.error('Error cargando meses:', error);
+                mostrarAlerta('Error al cargar los meses', 'error');
+            }
+        }
+
+        // Cargar datos de un mes
+        async function cargarMes(mes) {
+            try {
+                mesActual = mes;
+                
+                // Actualizar botones
+                document.querySelectorAll('.mes-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.textContent === mes);
+                });
+                
+                document.getElementById('mesActual').textContent = mes + ' 2026';
+                
+                // Mostrar botones del mes
+                document.getElementById('btnComputoMensual').style.display = 'inline-block';
+                document.getElementById('btnResetearMes').style.display = 'inline-block';
+                
+                // Mostrar selector de usuario
+                document.getElementById('userSelector').style.display = 'block';
+                await cargarSelectorUsuarios();
+                
+                // Mostrar loading
+                document.getElementById('calendarGrid').innerHTML = `
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Cargando ${mes}...</p>
+                    </div>
+                `;
+                
+                const response = await fetch(`/api/mes/${mes}`);
+                const data = await response.json();
+                
+                diasMes = data.dias;
+                
+                // Actualizar estadísticas
+                document.getElementById('statTotalDias').textContent = data.estadisticas.total;
+                document.getElementById('statAsignados').textContent = data.estadisticas.asignados;
+                document.getElementById('statPendientes').textContent = data.estadisticas.pendientes;
+                
+                // Actualizar info del mes
+                document.getElementById('mesInfo').style.display = 'block';
+                document.getElementById('infoTotalDias').textContent = data.estadisticas.total;
+                document.getElementById('infoAsignados').textContent = data.estadisticas.asignados;
+                document.getElementById('infoPendientes').textContent = data.estadisticas.pendientes;
+                document.getElementById('infoConflictos').textContent = data.estadisticas.conflictos;
+                
+                renderizarCalendario(data.dias);
+                
+                // Actualizar estadísticas del usuario si hay uno seleccionado
+                if (usuarioSeleccionado) {
+                    await cargarEstadisticasUsuario(usuarioSeleccionado);
+                }
+            } catch (error) {
+                console.error('Error cargando mes:', error);
+                mostrarAlerta('Error al cargar el mes: ' + error.message, 'error');
+            }
+        }
+
+        // Renderizar calendario
+        function renderizarCalendario(dias) {
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+            
+            const diasOrdenados = Object.keys(dias).sort((a, b) => a - b);
+            
+            diasOrdenados.forEach(dia => {
+                const info = dias[dia];
+                const card = document.createElement('div');
+                card.className = `day-card ${info.tipo}`;
+                
+                if (info.persona) {
+                    card.classList.add('asignado');
+                }
+                
+                let conflictoClass = '';
+                let conflictoWarning = '';
+                if (info.persona && !info.disponible) {
+                    conflictoClass = 'conflicto';
+                    conflictoWarning = '<div style="color: #dc2626; font-size: 0.75rem; margin-top: 5px;">⚠️ No disponible</div>';
+                }
+                
+                card.innerHTML = `
+                    <div class="day-header">
+                        <div class="day-number">${dia}</div>
+                        <span class="day-type ${info.tipo}">${info.tipo}</span>
+                    </div>
+                    <div class="day-weekday">${info.dia_semana}</div>
+                    ${info.persona 
+                        ? `<div class="day-persona ${conflictoClass}">${info.persona}${conflictoWarning}</div>` 
+                        : '<div class="day-vacio">Sin asignar</div>'
+                    }
+                `;
+                
+                // Event handler
+                card.onclick = () => abrirModalAsignar(dia);
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Abrir modal de asignación
+        async function abrirModalAsignar(dia) {
+            diaSeleccionado = dia;
+            const info = diasMes[dia];
+            
+            document.getElementById('modalDia').textContent = dia;
+            document.getElementById('modalFecha').textContent = info.fecha;
+            document.getElementById('modalTipo').textContent = info.tipo.toUpperCase();
+            
+            // Cargar select de personas
+            const select = document.getElementById('modalPersonaSelect');
+            select.innerHTML = '<option value="">-- Seleccionar persona --</option>';
+            
+            // Obtener personas activas para esta fecha
+            const respActivas = await fetch(`/api/personas/activas?fecha=${info.fecha}`);
+            const dataActivas = await respActivas.json();
+            
+            dataActivas.personas.forEach(p => {
+                const option = document.createElement('option');
+                option.value = p.nombre;
+                option.textContent = p.nombre;
+                if (p.nombre === info.persona) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+            
+            // Mostrar botón eliminar si hay persona asignada
+            document.getElementById('btnEliminar').style.display = info.persona ? 'block' : 'none';
+            
+            // Obtener sugerencia
+            try {
+                const respSugerencia = await fetch(`/api/sugerir/${mesActual}/${dia}`);
+                const dataSugerencia = await respSugerencia.json();
+                
+                if (dataSugerencia.sugerencia) {
+                    document.getElementById('sugerenciaTexto').textContent = dataSugerencia.sugerencia;
+                    document.getElementById('modalSugerencia').style.display = 'block';
+                } else {
+                    document.getElementById('modalSugerencia').style.display = 'none';
+                }
+            } catch (error) {
+                document.getElementById('modalSugerencia').style.display = 'none';
+            }
+            
+            document.getElementById('modalAsignar').classList.add('active');
+        }
+
+        // Guardar asignación
+        async function guardarAsignacion() {
+            const persona = document.getElementById('modalPersonaSelect').value;
+            
+            if (!persona) {
+                mostrarAlerta('Debes seleccionar una persona', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/asignar', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        mes: mesActual,
+                        dia: parseInt(diaSeleccionado),
+                        persona: persona,
+                        forzar: false
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    mostrarAlerta(data.mensaje, 'success');
+                    cerrarModal('modalAsignar');
+                    await cargarMes(mesActual);  // Recargar el mes completo
+                    
+                    // Si hay usuario seleccionado, actualizar sus estadísticas
+                    if (usuarioSeleccionado) {
+                        await cargarEstadisticasUsuario(usuarioSeleccionado);
+                    }
+                } else {
+                    if (data.error === 'persona_no_disponible') {
+                        if (confirm(`${data.mensaje}\n\n¿Deseas asignar de todas formas?`)) {
+                            // Reintentar con forzar = true
+                            const response2 = await fetch('/api/asignar', {
+                                method: 'POST',
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify({
+                                    mes: mesActual,
+                                    dia: parseInt(diaSeleccionado),
+                                    persona: persona,
+                                    forzar: true
+                                })
+                            });
+                            
+                            const data2 = await response2.json();
+                            if (response2.ok) {
+                                mostrarAlerta(data2.mensaje, 'success');
+                                cerrarModal('modalAsignar');
+                                await cargarMes(mesActual);
+                                
+                                if (usuarioSeleccionado) {
+                                    await cargarEstadisticasUsuario(usuarioSeleccionado);
+                                }
+                            } else {
+                                mostrarAlerta('Error: ' + data2.error, 'error');
+                            }
+                        }
+                    } else {
+                        mostrarAlerta('Error: ' + (data.mensaje || data.error), 'error');
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarAlerta('Error al guardar la asignación: ' + error.message, 'error');
+            }
+        }
+
+        // Eliminar guardia
+        async function eliminarGuardia() {
+            if (!confirm('¿Estás seguro de eliminar esta guardia?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/eliminar', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        mes: mesActual,
+                        dia: parseInt(diaSeleccionado)  // Asegurar que sea número
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    mostrarAlerta(data.mensaje, 'success');
+                    cerrarModal('modalAsignar');
+                    
+                    // Recargar mes y actualizar estadísticas
+                    await cargarMes(mesActual);
+                    
+                    // Si hay usuario seleccionado, actualizar sus estadísticas
+                    if (usuarioSeleccionado) {
+                        await cargarEstadisticasUsuario(usuarioSeleccionado);
+                    }
+                    
+                    // Actualizar selector de usuarios
+                    await cargarSelectorUsuarios();
+                } else {
+                    mostrarAlerta('Error: ' + data.error, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarAlerta('Error al eliminar la guardia: ' + error.message, 'error');
+            }
+        }
+
+        // Cargar personas
+        async function cargarPersonas() {
+            try {
+                const response = await fetch('/api/personas/activas');
+                const data = await response.json();
+                
+                const lista = document.getElementById('personasList');
+                lista.innerHTML = '';
+                
+                // Cargar todas las personas
+                const respDisp = await fetch('/api/disponibilidad');
+                const dataDisp = await respDisp.json();
+                
+                Object.keys(dataDisp).forEach(persona => {
+                    const info = dataDisp[persona];
+                    const item = document.createElement('div');
+                    item.className = `persona-item ${info.activo ? 'activo' : 'inactivo'}`;
+                    item.innerHTML = `
+                        <span style="font-size: 0.9rem; font-weight: 500;">${persona}</span>
+                        <span class="persona-status ${info.activo ? 'activo' : 'inactivo'}">
+                            ${info.activo ? '✓ Activo' : '✗ Inactivo'}
+                        </span>
+                    `;
+                    lista.appendChild(item);
+                });
+            } catch (error) {
+                console.error('Error cargando personas:', error);
+            }
+        }
+
+        // Cargar disponibilidad
+        async function cargarDisponibilidad() {
+            try {
+                const response = await fetch('/api/disponibilidad');
+                personasDisponibilidad = await response.json();
+            } catch (error) {
+                console.error('Error cargando disponibilidad:', error);
+            }
+        }
+
+        // Mostrar gestión de personas
+        async function mostrarGestionPersonas() {
+            await cargarDisponibilidad();
+            
+            const lista = document.getElementById('gestionPersonasList');
+            lista.innerHTML = '';
+            
+            Object.keys(personasDisponibilidad).forEach(persona => {
+                const info = personasDisponibilidad[persona];
+                const div = document.createElement('div');
+                div.style.marginBottom = '20px';
+                div.style.padding = '20px';
+                div.style.background = info.activo ? '#f0fdf4' : '#fef2f2';
+                div.style.borderRadius = '8px';
+                div.style.border = `2px solid ${info.activo ? '#86efac' : '#fca5a5'}`;
+                
+                const activo = info.activo;
+                const desde = info.desde || '';
+                const hasta = info.hasta || '';
+                const motivo = info.motivo || '';
+                
+                div.innerHTML = `
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="margin: 0 0 10px 0; color: var(--color-dark); display: flex; align-items: center; gap: 10px;">
+                            <span>${persona}</span>
+                            <span style="font-size: 0.8rem; padding: 4px 10px; border-radius: 12px; background: ${activo ? '#22c55e' : '#ef4444'}; color: white;">
+                                ${activo ? '✓ ACTIVO' : '✗ INACTIVO'}
+                            </span>
+                        </h4>
+                    </div>
+                    
+                    <div style="display: grid; gap: 15px;">
+                        <!-- Estado -->
+                        <div>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600;">
+                                <input type="checkbox" id="check_${persona}" ${activo ? 'checked' : ''} 
+                                       onchange="togglePersonaActivo('${persona}', this.checked)"
+                                       style="width: 18px; height: 18px; cursor: pointer;">
+                                <span>Persona Activa (Disponible para guardias)</span>
+                            </label>
+                        </div>
+                        
+                        <!-- Panel de Inactividad -->
+                        <div id="panel_${persona}" style="display: ${activo ? 'none' : 'block'}; background: white; padding: 15px; border-radius: 6px; border: 1px solid #e5e7eb;">
+                            <h5 style="margin: 0 0 12px 0; color: #dc2626; font-size: 0.95rem;">
+                                📅 Período de Inactividad
+                            </h5>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: 600; color: #374151;">
+                                        Desde:
+                                    </label>
+                                    <input type="date" id="desde_${persona}" value="${desde}"
+                                           style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 0.9rem;">
+                                </div>
+                                
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: 600; color: #374151;">
+                                        Hasta:
+                                    </label>
+                                    <input type="date" id="hasta_${persona}" value="${hasta}"
+                                           style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 0.9rem;">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: 600; color: #374151;">
+                                    Motivo:
+                                </label>
+                                <input type="text" id="motivo_${persona}" value="${motivo}" 
+                                       placeholder="Ej: Vacaciones, Licencia médica, etc."
+                                       style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 0.9rem;">
+                            </div>
+                            
+                            <button onclick="guardarInactividad('${persona}')" 
+                                    style="margin-top: 12px; width: 100%; padding: 10px; background: #3b82f6; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                                💾 Guardar Período de Inactividad
+                            </button>
+                        </div>
+                        
+                        ${!activo && (desde || hasta) ? `
+                            <div style="background: #fef3c7; padding: 12px; border-radius: 6px; font-size: 0.85rem; border-left: 3px solid #f59e0b;">
+                                <strong>📌 Resumen:</strong><br>
+                                ${desde ? `Desde: ${formatearFecha(desde)}<br>` : ''}
+                                ${hasta ? `Hasta: ${formatearFecha(hasta)}<br>` : ''}
+                                ${motivo ? `Motivo: ${motivo}` : ''}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                
+                lista.appendChild(div);
+                
+                // Event listener para mostrar/ocultar panel
+                const checkbox = document.getElementById(`check_${persona}`);
+                if (checkbox) {
+                    checkbox.addEventListener('change', function() {
+                        const panel = document.getElementById(`panel_${persona}`);
+                        if (panel) {
+                            panel.style.display = this.checked ? 'none' : 'block';
+                        }
+                    });
+                }
+            });
+            
+            document.getElementById('modalPersonas').classList.add('active');
+        }
+
+        // Formatear fecha para mostrar
+        function formatearFecha(fechaStr) {
+            if (!fechaStr) return '';
+            const fecha = new Date(fechaStr + 'T00:00:00');
+            return fecha.toLocaleDateString('es-AR', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+
+        // Guardar período de inactividad
+        async function guardarInactividad(persona) {
+            const desde = document.getElementById(`desde_${persona}`).value;
+            const hasta = document.getElementById(`hasta_${persona}`).value;
+            const motivo = document.getElementById(`motivo_${persona}`).value;
+            
+            if (!motivo) {
+                mostrarAlerta('Debes ingresar un motivo de inactividad', 'warning');
+                return;
+            }
+            
+            if (!desde && !hasta) {
+                mostrarAlerta('Debes especificar al menos una fecha (desde o hasta)', 'warning');
+                return;
+            }
+            
+            // Validar que 'desde' sea anterior a 'hasta'
+            if (desde && hasta && desde > hasta) {
+                mostrarAlerta('La fecha "Desde" debe ser anterior a la fecha "Hasta"', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/disponibilidad/${encodeURIComponent(persona)}`, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        activo: false,
+                        motivo: motivo,
+                        desde: desde || null,
+                        hasta: hasta || null
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    let mensaje = `✅ ${data.mensaje}\n\n`;
+                    mensaje += `📅 Período: ${desde ? formatearFecha(desde) : 'Sin fecha inicio'} → ${hasta ? formatearFecha(hasta) : 'Sin fecha fin'}\n`;
+                    mensaje += `📝 Motivo: ${motivo}`;
+                    
+                    mostrarAlerta(data.mensaje, 'success');
+                    alert(mensaje);
+                    
+                    await cargarPersonas();
+                    await cargarDisponibilidad();
+                    if (mesActual) {
+                        await cargarMes(mesActual);
+                    }
+                    
+                    // Recargar modal
+                    cerrarModal('modalPersonas');
+                    setTimeout(() => mostrarGestionPersonas(), 300);
+                } else {
+                    mostrarAlerta('Error: ' + data.error, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarAlerta('Error al guardar período de inactividad', 'error');
+            }
+        }
+
+        // Toggle estado activo de persona (solo cambia visualmente)
+        async function togglePersonaActivo(persona, activo) {
+            if (activo) {
+                // Si activa la persona, guardar inmediatamente como activa
+                try {
+                    const response = await fetch(`/api/disponibilidad/${encodeURIComponent(persona)}`, {
+                        method: 'PUT',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            activo: true,
+                            motivo: null,
+                            desde: null,
+                            hasta: null
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        mostrarAlerta(`✅ ${persona} marcado como ACTIVO`, 'success');
+                        await cargarPersonas();
+                        await cargarDisponibilidad();
+                        if (mesActual) {
+                            await cargarMes(mesActual);
+                        }
+                        
+                        // Recargar modal
+                        cerrarModal('modalPersonas');
+                        setTimeout(() => mostrarGestionPersonas(), 300);
+                    } else {
+                        mostrarAlerta('Error: ' + data.error, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    mostrarAlerta('Error al actualizar disponibilidad', 'error');
+                }
+            }
+            // Si desactiva, solo muestra el panel, el guardado lo hace el botón
+        }
+
+        // Descargar Excel
+        function descargarExcel() {
+            window.location.href = '/api/descargar';
+        }
+
+        // Cerrar modal
+        function cerrarModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Mostrar alerta
+        function mostrarAlerta(mensaje, tipo) {
+            const alert = document.getElementById('alertBox');
+            alert.className = `alert alert-${tipo} show`;
+            alert.textContent = mensaje;
+            
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 5000);
+        }
+
+        // Cerrar modal al hacer clic fuera
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        }
+
+        // Cargar selector de usuarios
+        async function cargarSelectorUsuarios() {
+            try {
+                const response = await fetch('/api/disponibilidad');
+                personasDisponibilidad = await response.json();
+                
+                const grid = document.getElementById('userSelectorGrid');
+                grid.innerHTML = '';
+                
+                // Obtener primer día del mes actual para verificar disponibilidad
+                let fechaReferencia = null;
+                if (mesActual) {
+                    const mesNum = {
+                        'Enero': 1, 'Febrero': 2, 'Marzo': 3, 'Abril': 4,
+                        'Mayo': 5, 'Junio': 6, 'Julio': 7, 'Agosto': 8,
+                        'Septiembre': 9, 'Octubre': 10, 'Noviembre': 11, 'Diciembre': 12
+                    }[mesActual];
+                    fechaReferencia = `2026-${String(mesNum).padStart(2, '0')}-15`; // Día 15 como referencia
+                }
+                
+                for (const persona in personasDisponibilidad) {
+                    const info = personasDisponibilidad[persona];
+                    
+                    // Verificar disponibilidad específica para este mes
+                    let disponibleEnMes = true;
+                    if (fechaReferencia) {
+                        disponibleEnMes = await verificarDisponibilidadEnFecha(persona, fechaReferencia);
+                    } else {
+                        // Si no hay mes seleccionado, usar estado general
+                        disponibleEnMes = info.activo;
+                    }
+                    
+                    // Obtener estadísticas del usuario
+                    let stats = { total: 0, habil: 0, vispera: 0, feriado: 0 };
+                    try {
+                        const respStats = await fetch(`/api/estadisticas/usuario/${encodeURIComponent(persona)}`);
+                        const dataStats = await respStats.json();
+                        if (dataStats.estadisticas) {
+                            stats = dataStats.estadisticas;
+                        }
+                    } catch (e) {
+                        console.error('Error cargando stats:', e);
+                    }
+                    
+                    estadisticasUsuarios[persona] = stats;
+                    
+                    const card = document.createElement('div');
+                    card.className = 'user-card';
+                    
+                    // Marcar como inactivo solo si NO está disponible en ESTE mes
+                    if (!disponibleEnMes) {
+                        card.classList.add('inactive');
+                    }
+                    if (usuarioSeleccionado === persona) {
+                        card.classList.add('selected');
+                    }
+                    
+                    // Mostrar indicador de periodo de inactividad si aplica
+                    let indicadorInactividad = '';
+                    if (!info.activo && (info.desde || info.hasta)) {
+                        const desde = info.desde ? new Date(info.desde).toLocaleDateString('es-AR', {month: 'short', day: 'numeric'}) : '...';
+                        const hasta = info.hasta ? new Date(info.hasta).toLocaleDateString('es-AR', {month: 'short', day: 'numeric'}) : '...';
+                        
+                        if (!disponibleEnMes) {
+                            indicadorInactividad = `<div style="font-size: 0.7rem; color: #dc2626; margin-top: 3px;">🚫 ${desde} - ${hasta}</div>`;
+                        }
+                    }
+                    
+                    card.innerHTML = `
+                        <div>
+                            <div class="user-card-name">${persona}</div>
+                            <div class="user-card-stats">
+                                <span class="stat-badge" title="Hábiles">H: ${stats.habil}</span>
+                                <span class="stat-badge" title="Vísperas">V: ${stats.vispera}</span>
+                                <span class="stat-badge" title="Feriados">F: ${stats.feriado}</span>
+                            </div>
+                            ${indicadorInactividad}
+                        </div>
+                        <div style="font-size: 1.5rem; font-weight: bold;">${stats.total}</div>
+                    `;
+                    
+                    if (disponibleEnMes) {
+                        card.onclick = () => seleccionarUsuario(persona);
+                    }
+                    
+                    grid.appendChild(card);
+                }
+            } catch (error) {
+                console.error('Error cargando selector:', error);
+            }
+        }
+
+        // Verificar disponibilidad en fecha específica
+        async function verificarDisponibilidadEnFecha(persona, fecha) {
+            try {
+                const response = await fetch(`/api/personas/activas?fecha=${fecha}`);
+                const data = await response.json();
+                
+                // El API devuelve {personas: [{nombre: "...", activo: true}, ...]}
+                const personaEnLista = data.personas.find(p => p.nombre === persona);
+                return personaEnLista !== undefined;
+            } catch (error) {
+                console.error('Error verificando disponibilidad:', error);
+                // En caso de error, usar estado general
+                return personasDisponibilidad[persona]?.activo || false;
+            }
+        }
+
+        // Seleccionar usuario
+        function seleccionarUsuario(persona) {
+            usuarioSeleccionado = persona;
+            
+            // Actualizar UI
+            document.querySelectorAll('.user-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            // Cargar estadísticas
+            cargarEstadisticasUsuario(persona);
+        }
+
+        // Cargar estadísticas de usuario
+        async function cargarEstadisticasUsuario(persona) {
+            try {
+                const response = await fetch(`/api/estadisticas/usuario/${encodeURIComponent(persona)}`);
+                const data = await response.json();
+                
+                const stats = data.estadisticas;
+                
+                document.getElementById('statsUserName').textContent = persona;
+                document.getElementById('statsTotal').textContent = stats.total;
+                document.getElementById('statsHabil').textContent = stats.habil;
+                document.getElementById('statsVispera').textContent = stats.vispera;
+                document.getElementById('statsFeriado').textContent = stats.feriado;
+                
+                // Estadísticas del mes actual
+                const statsMes = stats.por_mes && stats.por_mes[mesActual] ? stats.por_mes[mesActual].total : 0;
+                document.getElementById('statsMesActual').textContent = statsMes;
+                
+                document.getElementById('userStats').classList.add('show');
+            } catch (error) {
+                console.error('Error cargando estadísticas:', error);
+            }
+        }
+
+        // Activar modo auto-asignación
+        // Distribución automática
+        async function distribucionAutomatica() {
+            if (!mesActual) {
+                mostrarAlerta('Primero selecciona un mes', 'warning');
+                return;
+            }
+            
+            const confirmar = confirm(
+                `🎯 DISTRIBUCIÓN COMPLETA Y EQUITATIVA - ${mesActual}\n\n` +
+                `⚠️ ATENCIÓN: Esto LLENARÁ TODOS los días del mes\n` +
+                `(Sobrescribirá asignaciones existentes)\n\n` +
+                `📊 SISTEMA DE PUNTOS:\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `• Día hábil    = 1.0 punto  (más liviano)\n` +
+                `• Víspera      = 1.5 puntos (intermedio)\n` +
+                `• Feriado      = 2.0 puntos (más pesado)\n\n` +
+                `✅ GARANTÍAS:\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `1. TODO el mes queda cubierto (100%)\n` +
+                `2. Cada persona recibe puntos similares\n` +
+                `3. Balance automático entre tipos de día\n\n` +
+                `Ejemplo: Persona con 2 feriados (4 pts) es similar\n` +
+                `a otra con 1 feriado + 1 víspera + 1 hábil (4.5 pts)\n\n` +
+                `⚠️ Esto reemplazará asignaciones existentes.\n\n` +
+                `¿Continuar?`
+            );
+            
+            if (!confirmar) return;
+            
+            try {
+                mostrarAlerta('⏳ Calculando distribución equitativa completa...', 'info');
+                
+                const response = await fetch(`/api/distribucion/auto/${mesActual}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'}
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Crear mensaje detallado
+                    let mensaje = `✅ DISTRIBUCIÓN COMPLETA - ${data.mes}\n`;
+                    mensaje += `═══════════════════════════════════════════════════\n\n`;
+                    mensaje += `📊 RESUMEN:\n`;
+                    mensaje += `• Cobertura: ${data.cobertura}\n`;
+                    mensaje += `• Días asignados: ${data.dias_asignados} de ${data.dias_totales}\n`;
+                    mensaje += `• Personas: ${data.personas_participantes}\n\n`;
+                    
+                    mensaje += `💯 SISTEMA DE PUNTOS:\n`;
+                    mensaje += `• Hábil: ${data.sistema_puntos.habil}\n`;
+                    mensaje += `• Víspera: ${data.sistema_puntos.vispera}\n`;
+                    mensaje += `• Feriado: ${data.sistema_puntos.feriado}\n\n`;
+                    
+                    mensaje += `🎯 EQUIDAD:\n`;
+                    mensaje += `• Puntos totales del mes: ${data.puntos_totales_mes}\n`;
+                    mensaje += `• Ideal por persona: ${data.puntos_ideal_por_persona}\n`;
+                    mensaje += `• Mínimo recibido: ${data.equidad.puntos_minimos} pts\n`;
+                    mensaje += `• Máximo recibido: ${data.equidad.puntos_maximos} pts\n`;
+                    mensaje += `• Diferencia: ${data.equidad.diferencia} pts\n`;
+                    mensaje += `• Nivel de equidad: ${data.equidad.nivel.toUpperCase()}\n\n`;
+                    
+                    mensaje += `👥 DISTRIBUCIÓN POR PERSONA:\n`;
+                    mensaje += `───────────────────────────────────────────────────\n`;
+                    
+                    // Ordenar por puntos para ver la distribución
+                    const personas_ordenadas = Object.entries(data.distribucion)
+                        .sort((a, b) => b[1].puntos - a[1].puntos);
+                    
+                    for (const [persona, dist] of personas_ordenadas) {
+                        mensaje += `\n${persona}:\n`;
+                        mensaje += `  Días: ${dist.total} (H:${dist.habil} V:${dist.vispera} F:${dist.feriado})\n`;
+                        mensaje += `  Puntos: ${dist.puntos}\n`;
+                    }
+                    
+                    mostrarAlerta(data.mensaje, 'success');
+                    alert(mensaje);
+                    
+                    await cargarMes(mesActual);  // Recargar mes
+                    await cargarSelectorUsuarios();  // Actualizar estadísticas
+                } else {
+                    mostrarAlerta(data.error || 'Error en distribución automática', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarAlerta('Error al realizar distribución automática: ' + error.message, 'error');
+            }
+        }
+
+        // Distribución balanceada (solo días pendientes)
+        async function distribucionBalanceada() {
+            if (!mesActual) {
+                mostrarAlerta('Primero selecciona un mes', 'warning');
+                return;
+            }
+            
+            const confirmar = confirm(
+                `⚖️ DISTRIBUCIÓN BALANCEADA - ${mesActual}\n\n` +
+                `🎯 ESTRATEGIA:\n` +
+                `• Solo asigna días PENDIENTES (sin persona)\n` +
+                `• Preserva asignaciones EXISTENTES\n` +
+                `• Prioriza a quien tiene MENOS guardias\n` +
+                `• Busca EQUIDAD entre todos\n\n` +
+                `📊 PERFECTO PARA:\n` +
+                `• Febrero: Ya tienes 1-17 asignados\n` +
+                `• Solo llenar 18-28 equitativamente\n\n` +
+                `¿Continuar?`
+            );
+            
+            if (!confirmar) return;
+            
+            try {
+                mostrarAlerta('⚖️ Calculando distribución balanceada...', 'info');
+                
+                const response = await fetch(`/api/distribucion/balancear/${mesActual}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'}
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    let mensaje = `✅ DISTRIBUCIÓN BALANCEADA COMPLETADA\n`;
+                    mensaje += `═══════════════════════════════════════════════════\n\n`;
+                    mensaje += `📅 Mes: ${data.mes}\n`;
+                    mensaje += `📊 Días que ya estaban asignados: ${data.dias_que_ya_estaban}\n`;
+                    mensaje += `✨ Días pendientes asignados ahora: ${data.dias_pendientes_asignados}\n`;
+                    mensaje += `👥 Personas participantes: ${data.personas_participantes}\n\n`;
+                    
+                    mensaje += `🎯 EQUIDAD LOGRADA:\n`;
+                    mensaje += `───────────────────────────────────────────────────\n`;
+                    mensaje += `• Puntos mínimos: ${data.equidad.puntos_minimos}\n`;
+                    mensaje += `• Puntos máximos: ${data.equidad.puntos_maximos}\n`;
+                    mensaje += `• Diferencia: ${data.equidad.diferencia} puntos\n`;
+                    mensaje += `• Nivel: ${data.equidad.nivel.toUpperCase()}\n\n`;
+                    
+                    mensaje += `👥 ESTADO FINAL POR PERSONA:\n`;
+                    mensaje += `───────────────────────────────────────────────────\n`;
+                    
+                    // Ordenar por total para mostrar ranking
+                    const personas_ordenadas = Object.entries(data.estado_final)
+                        .sort((a, b) => b[1].total - a[1].total);
+                    
+                    for (const [persona, estado] of personas_ordenadas) {
+                        mensaje += `\n${persona}:\n`;
+                        mensaje += `  Total: ${estado.total} días (${estado.puntos} pts)\n`;
+                        mensaje += `  Detalle: H:${estado.habil} V:${estado.vispera} F:${estado.feriado}\n`;
+                    }
+                    
+                    mostrarAlerta(data.mensaje, 'success');
+                    alert(mensaje);
+                    
+                    await cargarMes(mesActual);
+                    await cargarSelectorUsuarios();
+                } else {
+                    mostrarAlerta(data.error || 'Error en distribución balanceada', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarAlerta('Error al realizar distribución balanceada: ' + error.message, 'error');
+            }
+        }
+
+        // Calcular cuotas sugeridas (SIN asignar automáticamente)
+        async function calcularCuotas() {
+            if (!mesActual) {
+                mostrarAlerta('Primero selecciona un mes', 'warning');
+                return;
+            }
+            
+            try {
+                mostrarAlerta('🧮 Calculando cuotas sugeridas...', 'info');
+                
+                const response = await fetch(`/api/cuotas/sugeridas/${mesActual}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Actualizar las tarjetas de usuario con las cuotas
+                    await mostrarCuotasSugeridas(data);
+                    
+                    let mensaje = `🎯 CUOTAS SUGERIDAS - ${data.mes}\n\n`;
+                    mensaje += `📊 RESUMEN:\n`;
+                    mensaje += `• Total días del mes: ${data.total_dias_mes}\n`;
+                    mensaje += `• Ya asignados: ${data.dias_asignados}\n`;
+                    mensaje += `• Disponibles: ${data.dias_disponibles}\n`;
+                    mensaje += `  - Hábiles: ${data.disponibles_por_tipo.habil}\n`;
+                    mensaje += `  - Vísperas: ${data.disponibles_por_tipo.vispera}\n`;
+                    mensaje += `  - Feriados: ${data.disponibles_por_tipo.feriado}\n\n`;
+                    
+                    mensaje += `💯 IDEAL POR PERSONA:\n`;
+                    mensaje += `• Días totales: ${data.cuota_ideal_por_persona}\n`;
+                    mensaje += `• Puntos: ${data.puntos_ideal_por_persona}\n\n`;
+                    
+                    mensaje += `👥 CUOTAS INDIVIDUALES:\n`;
+                    mensaje += `─────────────────────────────────\n`;
+                    
+                    for (const persona in data.cuotas_sugeridas) {
+                        const cuota = data.cuotas_sugeridas[persona];
+                        const actual = cuota.actuales;
+                        
+                        mensaje += `\n${persona}:\n`;
+                        mensaje += `  Tiene: ${actual.total} días (H:${actual.habil} V:${actual.vispera} F:${actual.feriado})\n`;
+                        mensaje += `  Puntos: ${actual.puntos.toFixed(1)} / ${cuota.puntos_ideal}\n`;
+                        
+                        if (cuota.balance === 'OK') {
+                            mensaje += `  ✅ COMPLETO\n`;
+                        } else if (cuota.balance === 'NECESITA_MAS') {
+                            mensaje += `  ⏳ Le faltan ~${cuota.faltan_dias} días más\n`;
+                        } else {
+                            mensaje += `  ✔️ Tiene suficiente\n`;
+                        }
+                    }
+                    
+                    mensaje += `\n─────────────────────────────────\n`;
+                    mensaje += `💡 Usa el modo auto-asignación para que cada\n`;
+                    mensaje += `   persona tome sus días faltantes.\n`;
+                    
+                    alert(mensaje);
+                    mostrarAlerta('✅ Cuotas calculadas - Revisa las tarjetas de usuarios', 'success');
+                } else {
+                    mostrarAlerta(data.error || 'Error al calcular cuotas', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarAlerta('Error al calcular cuotas: ' + error.message, 'error');
+            }
+        }
+
+        // Mostrar cuotas sugeridas en las tarjetas de usuario
+        async function mostrarCuotasSugeridas(data) {
+            // Recargar selector con las cuotas actualizadas
+            await cargarSelectorUsuarios();
+            
+            // Resaltar quiénes necesitan más días
+            for (const persona in data.cuotas_sugeridas) {
+                const cuota = data.cuotas_sugeridas[persona];
+                const cards = document.querySelectorAll('.user-card');
+                
+                cards.forEach(card => {
+                    if (card.textContent.includes(persona)) {
+                        if (cuota.balance === 'NECESITA_MAS') {
+                            card.style.borderColor = '#f59e0b';
+                            card.style.borderWidth = '3px';
+                        } else if (cuota.balance === 'OK') {
+                            card.style.borderColor = '#10b981';
+                            card.style.borderWidth = '3px';
+                        }
+                    }
+                });
+            }
+        }
+
+        // Resetear mes completo
+        async function resetearMes() {
+            if (!mesActual) {
+                mostrarAlerta('Primero selecciona un mes', 'warning');
+                return;
+            }
+            
+            // Confirmación con advertencia fuerte
+            const confirmar1 = confirm(
+                `⚠️ ADVERTENCIA: RESETEAR ${mesActual.toUpperCase()}\n\n` +
+                `Esto ELIMINARÁ TODAS las asignaciones del mes:\n` +
+                `• Se borrarán todos los oficiales asignados\n` +
+                `• El mes quedará completamente vacío\n` +
+                `• Esta acción NO se puede deshacer\n\n` +
+                `Los demás meses NO serán afectados.\n\n` +
+                `¿Estás SEGURO que quieres continuar?`
+            );
+            
+            if (!confirmar1) return;
+            
+            // Segunda confirmación
+            const confirmar2 = confirm(
+                `🚨 ÚLTIMA CONFIRMACIÓN\n\n` +
+                `Escribe mentalmente "SÍ, BORRAR TODO" y confirma.\n\n` +
+                `Se eliminarán TODAS las guardias de ${mesActual}.\n\n` +
+                `¿Proceder?`
+            );
+            
+            if (!confirmar2) return;
+            
+            try {
+                mostrarAlerta('🗑️ Reseteando mes...', 'info');
+                
+                const response = await fetch(`/api/mes/${mesActual}/resetear`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'}
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    let mensaje = `✅ MES RESETEADO EXITOSAMENTE\n\n`;
+                    mensaje += `📅 Mes: ${data.mes}\n`;
+                    mensaje += `🗑️ Asignaciones eliminadas: ${data.asignaciones_eliminadas}\n`;
+                    mensaje += `👥 Personas afectadas: ${data.personas_afectadas}\n\n`;
+                    mensaje += `${data.detalle}\n\n`;
+                    mensaje += `El mes ahora está completamente vacío.\n`;
+                    mensaje += `Puedes empezar a asignar de cero.`;
+                    
+                    alert(mensaje);
+                    mostrarAlerta(data.mensaje, 'success');
+                    
+                    // Recargar el mes
+                    await cargarMes(mesActual);
+                    
+                    // Actualizar selector de usuarios (sus conteos cambiaron)
+                    await cargarSelectorUsuarios();
+                } else {
+                    mostrarAlerta('Error: ' + data.error, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarAlerta('Error al resetear el mes: ' + error.message, 'error');
+            }
+        }
+
+        // Mostrar cómputo mensual
+        async function mostrarComputoMensual() {
+            if (!mesActual) {
+                mostrarAlerta('Primero selecciona un mes', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/mes/${mesActual}`);
+                const data = await response.json();
+                
+                document.getElementById('computoMesNombre').textContent = mesActual + ' 2026';
+                
+                const dias = data.dias;
+                const estadisticas = data.estadisticas;
+                
+                // Calcular estadísticas por persona
+                const computo = {};
+                
+                for (const dia in dias) {
+                    const info = dias[dia];
+                    const persona = info.persona;
+                    
+                    if (persona) {
+                        if (!computo[persona]) {
+                            computo[persona] = {
+                                habil: 0,
+                                vispera: 0,
+                                feriado: 0,
+                                total: 0,
+                                puntos: 0
+                            };
+                        }
+                        
+                        computo[persona][info.tipo]++;
+                        computo[persona].total++;
+                        
+                        // Calcular puntos
+                        const puntosPorTipo = {
+                            'habil': 1.0,
+                            'vispera': 1.5,
+                            'feriado': 2.0
+                        };
+                        computo[persona].puntos += puntosPorTipo[info.tipo];
+                    }
+                }
+                
+                // Ordenar por total descendente
+                const personasOrdenadas = Object.entries(computo).sort((a, b) => b[1].total - a[1].total);
+                
+                // Calcular totales
+                const totales = {
+                    habil: 0,
+                    vispera: 0,
+                    feriado: 0,
+                    total: 0,
+                    puntos: 0
+                };
+                
+                for (const [_, datos] of personasOrdenadas) {
+                    totales.habil += datos.habil;
+                    totales.vispera += datos.vispera;
+                    totales.feriado += datos.feriado;
+                    totales.total += datos.total;
+                    totales.puntos += datos.puntos;
+                }
+                
+                // Generar HTML
+                let html = `
+                    <div class="computo-summary">
+                        <div class="summary-card">
+                            <h4>Total Días</h4>
+                            <div class="value">${estadisticas.total}</div>
+                            <div class="subtitle">en el mes</div>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Asignados</h4>
+                            <div class="value" style="color: var(--color-success);">${estadisticas.asignados}</div>
+                            <div class="subtitle">${Math.round(estadisticas.asignados/estadisticas.total*100)}% cobertura</div>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Pendientes</h4>
+                            <div class="value" style="color: var(--color-danger);">${estadisticas.pendientes}</div>
+                            <div class="subtitle">sin asignar</div>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Puntos Totales</h4>
+                            <div class="value" style="color: var(--color-primary);">${totales.puntos.toFixed(1)}</div>
+                            <div class="subtitle">sistema de puntos</div>
+                        </div>
+                    </div>
+                    
+                    <h4 style="margin: 20px 0 10px 0; color: var(--color-dark);">📋 Detalle por Persona</h4>
+                    
+                    <table class="computo-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Persona</th>
+                                <th class="text-center">Hábiles</th>
+                                <th class="text-center">Vísperas</th>
+                                <th class="text-center">Feriados</th>
+                                <th class="text-center">Total Días</th>
+                                <th class="text-center">Puntos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                let posicion = 1;
+                for (const [persona, datos] of personasOrdenadas) {
+                    const rankClass = posicion <= 3 ? `ranking-${posicion}` : '';
+                    
+                    html += `
+                        <tr>
+                            <td class="text-center">
+                                <span class="ranking-position ${rankClass}">${posicion}</span>
+                            </td>
+                            <td><strong>${persona}</strong></td>
+                            <td class="text-center">
+                                <span class="computo-badge badge-habil">${datos.habil}</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="computo-badge badge-vispera">${datos.vispera}</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="computo-badge badge-feriado">${datos.feriado}</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="computo-badge badge-total">${datos.total}</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="computo-badge badge-puntos">${datos.puntos.toFixed(1)}</span>
+                            </td>
+                        </tr>
+                    `;
+                    posicion++;
+                }
+                
+                html += `
+                        <tr class="total-row">
+                            <td colspan="2" class="text-right"><strong>TOTALES:</strong></td>
+                            <td class="text-center"><strong>${totales.habil}</strong></td>
+                            <td class="text-center"><strong>${totales.vispera}</strong></td>
+                            <td class="text-center"><strong>${totales.feriado}</strong></td>
+                            <td class="text-center"><strong>${totales.total}</strong></td>
+                            <td class="text-center"><strong>${totales.puntos.toFixed(1)}</strong></td>
+                        </tr>
+                    </tbody>
+                    </table>
+                `;
+                
+                document.getElementById('computoMensualContent').innerHTML = html;
+                document.getElementById('modalComputoMensual').classList.add('active');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarAlerta('Error al generar cómputo mensual', 'error');
+            }
+        }
+
+        // Mostrar cómputo anual
+        async function mostrarComputoAnual() {
+            try {
+                mostrarAlerta('⏳ Cargando cómputo anual...', 'info');
+                
+                const response = await fetch('/api/reporte/anual');
+                
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                console.log('Datos recibidos:', data);
+                
+                // Calcular estadísticas por persona en todo el año
+                const computoAnual = {};
+                
+                // Inicializar con datos del API
+                for (const persona in data.por_persona) {
+                    computoAnual[persona] = {
+                        habil: 0,
+                        vispera: 0,
+                        feriado: 0,
+                        total: data.por_persona[persona].total,
+                        puntos: 0,
+                        por_mes: data.por_persona[persona].por_mes
+                    };
+                }
+                
+                // Obtener detalles de cada mes para calcular tipos y puntos
+                const PUNTOS = {'habil': 1.0, 'vispera': 1.5, 'feriado': 2.0};
+                
+                for (const mes in data.meses) {
+                    try {
+                        const respMes = await fetch(`/api/mes/${mes}`);
+                        if (!respMes.ok) continue;
+                        
+                        const dataMes = await respMes.json();
+                        
+                        for (const dia in dataMes.dias) {
+                            const info = dataMes.dias[dia];
+                            const persona = info.persona;
+                            
+                            if (persona && computoAnual[persona]) {
+                                const tipo = info.tipo;
+                                computoAnual[persona][tipo]++;
+                                computoAnual[persona].puntos += PUNTOS[tipo];
+                            }
+                        }
+                    } catch (error) {
+                        console.error(`Error cargando ${mes}:`, error);
+                    }
+                }
+                
+                // Ordenar por total
+                const personasOrdenadas = Object.entries(computoAnual).sort((a, b) => b[1].total - a[1].total);
+                
+                // Calcular totales generales
+                const totales = {
+                    habil: 0,
+                    vispera: 0,
+                    feriado: 0,
+                    total: data.totales.dias_asignados,
+                    puntos: 0
+                };
+                
+                for (const [_, datos] of personasOrdenadas) {
+                    totales.habil += datos.habil;
+                    totales.vispera += datos.vispera;
+                    totales.feriado += datos.feriado;
+                    totales.puntos += datos.puntos;
+                }
+                
+                const promedio = personasOrdenadas.length > 0 ? totales.total / personasOrdenadas.length : 0;
+                
+                // Generar HTML
+                let html = `
+                    <div class="computo-summary">
+                        <div class="summary-card">
+                            <h4>Total Días Año</h4>
+                            <div class="value">${data.totales.dias_totales}</div>
+                            <div class="subtitle">en 2026</div>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Días Asignados</h4>
+                            <div class="value" style="color: var(--color-success);">${data.totales.dias_asignados}</div>
+                            <div class="subtitle">${data.totales.porcentaje_cobertura}% del año</div>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Promedio por Persona</h4>
+                            <div class="value" style="color: var(--color-primary);">${promedio.toFixed(1)}</div>
+                            <div class="subtitle">días/persona</div>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Puntos Totales</h4>
+                            <div class="value" style="color: var(--color-warning);">${totales.puntos.toFixed(1)}</div>
+                            <div class="subtitle">sistema equitativo</div>
+                        </div>
+                    </div>
+                    
+                    <h4 style="margin: 20px 0 10px 0; color: var(--color-dark);">📊 Ranking Anual 2026</h4>
+                    
+                    <table class="computo-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Persona</th>
+                                <th class="text-center">Hábiles</th>
+                                <th class="text-center">Vísperas</th>
+                                <th class="text-center">Feriados</th>
+                                <th class="text-center">Total Días</th>
+                                <th class="text-center">Puntos</th>
+                                <th class="text-center">vs Promedio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                let posicion = 1;
+                for (const [persona, datos] of personasOrdenadas) {
+                    const rankClass = posicion <= 3 ? `ranking-${posicion}` : '';
+                    const diferencia = datos.total - promedio;
+                    const diferenciaColor = diferencia > 0 ? '#dc2626' : diferencia < 0 ? '#16a34a' : '#6b7280';
+                    const diferenciaTexto = diferencia > 0 ? `+${diferencia.toFixed(1)}` : diferencia.toFixed(1);
+                    
+                    html += `
+                        <tr>
+                            <td class="text-center">
+                                <span class="ranking-position ${rankClass}">${posicion}</span>
+                            </td>
+                            <td><strong>${persona}</strong></td>
+                            <td class="text-center">
+                                <span class="computo-badge badge-habil">${datos.habil}</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="computo-badge badge-vispera">${datos.vispera}</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="computo-badge badge-feriado">${datos.feriado}</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="computo-badge badge-total">${datos.total}</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="computo-badge badge-puntos">${datos.puntos.toFixed(1)}</span>
+                            </td>
+                            <td class="text-center">
+                                <span style="color: ${diferenciaColor}; font-weight: 600;">${diferenciaTexto}</span>
+                            </td>
+                        </tr>
+                    `;
+                    posicion++;
+                }
+                
+                html += `
+                        <tr class="total-row">
+                            <td colspan="2" class="text-right"><strong>TOTALES:</strong></td>
+                            <td class="text-center"><strong>${totales.habil}</strong></td>
+                            <td class="text-center"><strong>${totales.vispera}</strong></td>
+                            <td class="text-center"><strong>${totales.feriado}</strong></td>
+                            <td class="text-center"><strong>${totales.total}</strong></td>
+                            <td class="text-center"><strong>${totales.puntos.toFixed(1)}</strong></td>
+                            <td class="text-center">-</td>
+                        </tr>
+                    </tbody>
+                    </table>
+                    
+                    <h4 style="margin: 30px 0 15px 0; color: var(--color-dark);">📅 Distribución por Mes</h4>
+                    
+                    <div class="mes-grid">
+                `;
+                
+                for (const mes in data.meses) {
+                    html += `
+                        <div class="mes-card">
+                            <h5>${mes}</h5>
+                            <div class="dias">${data.meses[mes].asignados}</div>
+                            <div style="font-size: 0.75rem; color: #9ca3af;">
+                                de ${data.meses[mes].total}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                html += `</div>`;
+                
+                document.getElementById('computoAnualContent').innerHTML = html;
+                document.getElementById('modalComputoAnual').classList.add('active');
+                
+                mostrarAlerta('✅ Cómputo anual cargado', 'success');
+                
+            } catch (error) {
+                console.error('Error completo:', error);
+                mostrarAlerta('Error al generar cómputo anual: ' + error.message, 'error');
+            }
+        }
+
+        // Iniciar cuando cargue la página
+        window.onload = init;
+    </script>
+</body>
+</html>

@@ -2258,7 +2258,7 @@ if __name__ == '__main__':
     inicializar_calendario()
     
     # Obtener puerto desde variable de entorno (Render lo asigna automáticamente)
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 10000))
     
     print(f"""
     🌐 Accede a la aplicación en:

@@ -1,9 +1,9 @@
 {
   "TNIM BUTASSI": {
     "activo": false,
-    "motivo": "CAMPAÑA",
-    "desde": "2026-03-02",
-    "hasta": "2026-03-09"
+    "motivo": "Campaña",
+    "desde": "2026-03-09",
+    "hasta": "2026-03-15"
   },
   "TN MACHUCA": {
     "activo": true,
@@ -37,9 +37,9 @@
   },
   "TFIM RACEDO BRITOS": {
     "activo": false,
-    "motivo": "Licencia Anual",
-    "desde": null,
-    "hasta": "2026-03-09"
+    "motivo": "campaña",
+    "desde": "2026-03-09",
+    "hasta": "2026-03-15"
   },
   "TF ZALAZAR": {
     "activo": true,
@@ -61,15 +61,15 @@
   },
   "GUIM DIAZ": {
     "activo": false,
-    "motivo": "campana",
-    "desde": "2026-02-02",
-    "hasta": "2026-02-09"
+    "motivo": "campaña",
+    "desde": "2026-03-09",
+    "hasta": "2026-03-15"
   },
   "GUIM TORRES": {
     "activo": false,
     "motivo": "puesto",
     "desde": "2026-02-10",
-    "hasta": "2026-03-29"
+    "hasta": "2026-03-31"
   },
   "GUCO BENITEZ": {
     "activo": true,

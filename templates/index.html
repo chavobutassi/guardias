@@ -627,6 +627,226 @@
             background: rgba(255,255,255,0.3);
         }
 
+        .sugerencia-badge {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: #fef3c7;
+            color: #92400e;
+            margin-top: 4px;
+            font-weight: 500;
+            border: 1px solid #fbbf24;
+        }
+
+        .sugerencia-badge.sugerencia-ok {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+
+        /* Slider de Cuotas Sugeridas */
+        .cuotas-slider {
+            position: fixed;
+            top: 0;
+            right: -480px;
+            width: 480px;
+            height: 100vh;
+            background: white;
+            box-shadow: -4px 0 20px rgba(0,0,0,0.15);
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .cuotas-slider.active {
+            right: 0;
+        }
+
+        .cuotas-slider-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 1999;
+        }
+
+        .cuotas-slider-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .cuotas-slider-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .cuotas-slider-header h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .cuotas-slider-header p {
+            margin: 0;
+            font-size: 0.95rem;
+            opacity: 0.95;
+        }
+
+        .cuotas-slider-header .close-slider {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .cuotas-slider-header .close-slider:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+
+        .cuotas-slider-content {
+            padding: 25px;
+        }
+
+        .cuotas-resumen {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 5px solid #667eea;
+        }
+
+        .cuotas-resumen h4 {
+            margin: 0 0 15px 0;
+            color: #1e293b;
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .cuotas-resumen-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .cuotas-resumen-item:last-child {
+            border-bottom: none;
+        }
+
+        .cuotas-resumen-item span:first-child {
+            color: #64748b;
+        }
+
+        .cuotas-resumen-item span:last-child {
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .cuota-persona-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 14px;
+            transition: all 0.2s;
+        }
+
+        .cuota-persona-card:hover {
+            transform: translateX(-4px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        .cuota-persona-card.necesita-mas {
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .cuota-persona-card.completo {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .cuota-persona-nombre {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #1e293b;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cuota-persona-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .cuota-stat {
+            font-size: 0.85rem;
+            color: #64748b;
+            background: rgba(255,255,255,0.7);
+            padding: 6px 10px;
+            border-radius: 6px;
+        }
+
+        .cuota-stat strong {
+            color: #1e293b;
+            font-size: 1.1em;
+        }
+
+        .cuota-estado {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .cuota-estado.ok {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .cuota-estado.necesita {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .cuota-desglose {
+            margin-top: 12px;
+            padding: 10px;
+            background: rgba(102, 126, 234, 0.08);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #475569;
+        }
+
         .user-actions {
             display: flex;
             gap: 10px;
@@ -974,7 +1194,7 @@
                     
                     <div class="user-actions">
                         <button class="btn btn-primary" onclick="calcularCuotas()" id="btnCalcularCuotas">
-                            🧮 Calcular Guardias del Mes
+                            🧮 Calcular Cuotas del Mes
                         </button>
                         <button class="btn btn-success" onclick="distribucionBalanceada()" id="btnDistribuirPendientes">
                             ⚖️ Distribuir Días Pendientes
@@ -1092,6 +1312,26 @@
             </div>
 
             <div id="computoAnualContent"></div>
+        </div>
+    </div>
+
+    <!-- Overlay para el slider -->
+    <div class="cuotas-slider-overlay" id="cuotasSliderOverlay" onclick="cerrarSliderCuotas()"></div>
+
+    <!-- Slider de Cuotas Sugeridas -->
+    <div class="cuotas-slider" id="cuotasSlider">
+        <div class="cuotas-slider-header">
+            <button class="close-slider" onclick="cerrarSliderCuotas()" title="Cerrar">×</button>
+            <h3>📊 Cuotas Sugeridas</h3>
+            <p id="cuotasMesNombre"></p>
+        </div>
+        <div class="cuotas-slider-content">
+            <div class="cuotas-resumen" id="cuotasResumen">
+                <!-- Se llena dinámicamente -->
+            </div>
+            <div id="cuotasPersonas">
+                <!-- Se llena dinámicamente con las tarjetas de personas -->
+            </div>
         </div>
     </div>
 
@@ -1511,12 +1751,16 @@
                 const respDisp = await fetch('/api/disponibilidad');
                 const dataDisp = await respDisp.json();
                 
-                Object.keys(dataDisp).forEach(persona => {
-                    const info = dataDisp[persona];
+                // Ordenar por orden de llenado
+                const personasOrdenadas = Object.entries(dataDisp).sort((a, b) => (a[1].orden ?? 99) - (b[1].orden ?? 99));
+                personasOrdenadas.forEach(([persona, info]) => {
                     const item = document.createElement('div');
                     item.className = `persona-item ${info.activo ? 'activo' : 'inactivo'}`;
                     item.innerHTML = `
-                        <span style="font-size: 0.9rem; font-weight: 500;">${persona}</span>
+                        <span style="font-size: 0.9rem; font-weight: 500;">
+                            <span style="color:#9ca3af; font-weight:600; margin-right:4px;">#${info.orden ?? '?'}</span>${persona}
+                            <span style="font-size:0.75rem; color:#9ca3af; margin-left:4px;">RINA ${info.rina ?? '-'}</span>
+                        </span>
                         <span class="persona-status ${info.activo ? 'activo' : 'inactivo'}">
                             ${info.activo ? '✓ Activo' : '✗ Inactivo'}
                         </span>
@@ -2024,78 +2268,89 @@
             }
         }
 
-        // Distribución balanceada (solo días pendientes)
+        // Distribución balanceada (actualiza tarjetas con sugerencias)
         async function distribucionBalanceada() {
             if (!mesActual) {
                 mostrarAlerta('Primero selecciona un mes', 'warning');
                 return;
             }
             
-            const confirmar = confirm(
-                `⚖️ DISTRIBUCIÓN BALANCEADA - ${mesActual}\n\n` +
-                `🎯 ESTRATEGIA:\n` +
-                `• Solo asigna días PENDIENTES (sin persona)\n` +
-                `• Preserva asignaciones EXISTENTES\n` +
-                `• Prioriza a quien tiene MENOS guardias\n` +
-                `• Busca EQUIDAD entre todos\n\n` +
-                `📊 PERFECTO PARA:\n` +
-                `• Febrero: Ya tienes 1-17 asignados\n` +
-                `• Solo llenar 18-28 equitativamente\n\n` +
-                `¿Continuar?`
-            );
-            
-            if (!confirmar) return;
-            
             try {
-                mostrarAlerta('⚖️ Calculando distribución balanceada...', 'info');
+                mostrarAlerta('⚖️ Calculando distribución sugerida...', 'info');
                 
                 const response = await fetch(`/api/distribucion/balancear/${mesActual}`, {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'}
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ solo_calcular: true })
                 });
                 
                 const data = await response.json();
                 
                 if (response.ok) {
-                    let mensaje = `✅ DISTRIBUCIÓN BALANCEADA COMPLETADA\n`;
-                    mensaje += `═══════════════════════════════════════════════════\n\n`;
-                    mensaje += `📅 Mes: ${data.mes}\n`;
-                    mensaje += `📊 Días que ya estaban asignados: ${data.dias_que_ya_estaban}\n`;
-                    mensaje += `✨ Días pendientes asignados ahora: ${data.dias_pendientes_asignados}\n`;
-                    mensaje += `👥 Personas participantes: ${data.personas_participantes}\n\n`;
+                    // Actualizar las tarjetas de usuarios con la distribución sugerida
+                    actualizarTarjetasConSugerencias(data.estado_final);
                     
-                    mensaje += `🎯 EQUIDAD LOGRADA:\n`;
-                    mensaje += `───────────────────────────────────────────────────\n`;
-                    mensaje += `• Puntos mínimos: ${data.equidad.puntos_minimos}\n`;
-                    mensaje += `• Puntos máximos: ${data.equidad.puntos_maximos}\n`;
-                    mensaje += `• Diferencia: ${data.equidad.diferencia} puntos\n`;
-                    mensaje += `• Nivel: ${data.equidad.nivel.toUpperCase()}\n\n`;
-                    
-                    mensaje += `👥 ESTADO FINAL POR PERSONA:\n`;
-                    mensaje += `───────────────────────────────────────────────────\n`;
-                    
-                    // Ordenar por total para mostrar ranking
-                    const personas_ordenadas = Object.entries(data.estado_final)
-                        .sort((a, b) => b[1].total - a[1].total);
-                    
-                    for (const [persona, estado] of personas_ordenadas) {
-                        mensaje += `\n${persona}:\n`;
-                        mensaje += `  Total: ${estado.total} días (${estado.puntos} pts)\n`;
-                        mensaje += `  Detalle: H:${estado.habil} V:${estado.vispera} F:${estado.feriado}\n`;
-                    }
-                    
-                    mostrarAlerta(data.mensaje, 'success');
-                    alert(mensaje);
-                    
-                    await cargarMes(mesActual);
-                    await cargarSelectorUsuarios();
+                    // Mensaje corto de confirmación
+                    mostrarAlerta(
+                        `✅ Distribución calculada: ${data.dias_pendientes_asignados} días pendientes entre ${data.personas_participantes} personas (${data.equidad.nivel})`, 
+                        'success'
+                    );
                 } else {
-                    mostrarAlerta(data.error || 'Error en distribución balanceada', 'error');
+                    mostrarAlerta(data.error || 'Error al calcular distribución', 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                mostrarAlerta('Error al realizar distribución balanceada: ' + error.message, 'error');
+                mostrarAlerta('Error al calcular distribución: ' + error.message, 'error');
             }
+        }
+
+        // Actualizar tarjetas de usuarios con sugerencias
+        function actualizarTarjetasConSugerencias(estado_final) {
+            const userCards = document.querySelectorAll('.user-card');
+            
+            // Primero limpiar todos los bordes y badges anteriores
+            userCards.forEach(card => {
+                const badgeAnterior = card.querySelector('.sugerencia-badge');
+                if (badgeAnterior) {
+                    badgeAnterior.remove();
+                }
+                card.style.border = '2px solid var(--color-border)'; // Resetear borde
+            });
+            
+            userCards.forEach(card => {
+                const personaName = card.querySelector('.user-card-name').textContent.trim();
+                const sugerencia = estado_final[personaName];
+                
+                if (sugerencia) {
+                    // Esta persona está en la distribución sugerida
+                    const estadisticas = estadisticasUsuarios[personaName] || { total: 0 };
+                    
+                    // Calcular cuántas le faltan (basado en el total PROYECTADO vs actual)
+                    const faltan = Math.max(0, sugerencia.total - estadisticas.total);
+                    
+                    // Crear badge con la sugerencia
+                    const badge = document.createElement('div');
+                    badge.className = 'sugerencia-badge';
+                    
+                    if (faltan > 0) {
+                        // Necesita más días
+                        badge.innerHTML = `📋 Sugerido: +${faltan} día${faltan > 1 ? 's' : ''} (H:${sugerencia.habil} V:${sugerencia.vispera} F:${sugerencia.feriado})`;
+                        card.style.border = '3px solid #f59e0b'; // Naranja
+                    } else {
+                        // Ya tiene la cuota completa o más
+                        badge.className = 'sugerencia-badge sugerencia-ok';
+                        badge.innerHTML = `✅ Guardia completa (${sugerencia.total} días)`;
+                        card.style.border = '3px solid #10b981'; // Verde
+                    }
+                    
+                    // Insertar después del nombre
+                    const nameDiv = card.querySelector('.user-card-name');
+                    nameDiv.parentNode.insertBefore(badge, nameDiv.nextSibling);
+                } else {
+                    // Persona no está en la distribución (puede estar inactiva en este mes)
+                    // Dejar sin badge ni borde especial
+                }
+            });
         }
 
         // Calcular cuotas sugeridas (SIN asignar automáticamente)
@@ -2610,6 +2865,188 @@
                 console.error('Error completo:', error);
                 mostrarAlerta('Error al generar cómputo anual: ' + error.message, 'error');
             }
+        }
+
+        // ============================================================================
+        // FUNCIONES DEL SLIDER DE CUOTAS
+        // ============================================================================
+        
+        // Sobrescribir calcularCuotas original para usar slider
+        const calcularCuotasOriginal = calcularCuotas;
+        calcularCuotas = async function() {
+            if (!mesActual) {
+                mostrarAlerta('Primero selecciona un mes', 'warning');
+                return;
+            }
+            
+            try {
+                mostrarAlerta('🧮 Calculando cuotas sugeridas...', 'info');
+                
+                const response = await fetch(`/api/cuotas/sugeridas/${mesActual}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Actualizar las tarjetas de usuario con las cuotas
+                    await mostrarCuotasSugeridas(data);
+                    
+                    // Abrir slider en lugar de alert
+                    abrirSliderCuotas(data);
+                    
+                    mostrarAlerta('✅ Cuotas calculadas', 'success');
+                } else {
+                    mostrarAlerta(data.error || 'Error al calcular cuotas', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarAlerta('Error al calcular cuotas: ' + error.message, 'error');
+            }
+        };
+
+        // Abrir slider de cuotas
+        function abrirSliderCuotas(data) {
+            const slider = document.getElementById('cuotasSlider');
+            const overlay = document.getElementById('cuotasSliderOverlay');
+            
+            // Actualizar nombre del mes
+            document.getElementById('cuotasMesNombre').textContent = data.mes;
+            
+            // Generar resumen
+            const resumenHTML = `
+                <h4>📊 Resumen del Mes</h4>
+                <div class="cuotas-resumen-item">
+                    <span>Total días:</span>
+                    <span>${data.total_dias_mes}</span>
+                </div>
+                <div class="cuotas-resumen-item">
+                    <span>Ya asignados:</span>
+                    <span>${data.dias_asignados}</span>
+                </div>
+                <div class="cuotas-resumen-item">
+                    <span>Disponibles:</span>
+                    <span>${data.dias_disponibles}</span>
+                </div>
+                <div class="cuotas-resumen-item">
+                    <span style="font-size: 0.8rem;">H / V / F disponibles:</span>
+                    <span>${data.disponibles_por_tipo.habil} / ${data.disponibles_por_tipo.vispera} / ${data.disponibles_por_tipo.feriado}</span>
+                </div>
+                <div class="cuotas-resumen-item">
+                    <span>Cuota ideal/persona:</span>
+                    <span>${data.cuota_ideal_por_persona} días</span>
+                </div>
+                <div class="cuotas-resumen-item">
+                    <span>Puntos ideal/persona:</span>
+                    <span>${data.puntos_ideal_por_persona}</span>
+                </div>
+            `;
+            document.getElementById('cuotasResumen').innerHTML = resumenHTML;
+            
+            // Generar tarjetas de personas - ordenar por balance
+            let personasHTML = '';
+            const personasOrdenadas = Object.entries(data.cuotas_sugeridas).sort((a, b) => {
+                if (a[1].es_dnrd) return -1;  // DNRD siempre primero
+                if (b[1].es_dnrd) return 1;
+                // Ordenar por orden de llenado (más moderno primero = número más bajo)
+                const ordenA = a[1].orden ?? 99;
+                const ordenB = b[1].orden ?? 99;
+                return ordenA - ordenB;
+            });
+            
+            for (const [persona, cuota] of personasOrdenadas) {
+                // ---- Tarjeta especial para DNRD ----
+                if (cuota.es_dnrd) {
+                    const sugerido = cuota.sugeridos;
+                    const diasEsp = cuota.dias_especificos || [];
+                    let listaDias = '';
+                    if (diasEsp.length > 0) {
+                        listaDias = diasEsp.map(d => {
+                            const f = new Date(d.fecha + 'T00:00:00');
+                            const opciones = { day: 'numeric', month: 'short', weekday: 'short' };
+                            const etiqueta = d.tipo === 'feriado' ? '🔴' : d.tipo === 'vispera' ? '🟡' : '🔵';
+                            return `<li>${etiqueta} ${f.toLocaleDateString('es-AR', opciones)} (día ${d.dia})</li>`;
+                        }).join('');
+                    }
+                    personasHTML += `
+                        <div class="cuota-persona-card" style="border: 2.5px solid #b45309; background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); grid-column: 1 / -1;">
+                            <div class="cuota-persona-nombre" style="color: #b45309;">⚠️ DNRD — Días sin personal disponible</div>
+                            <div style="font-size: 0.9em; color: #92400e; margin: 6px 0 4px;">
+                                Estos días <strong>todos los oficiales están de campaña</strong>. Deben ser cubiertos por <strong>DNRD</strong>.
+                            </div>
+                            <div class="cuota-persona-stats">
+                                <div class="cuota-stat"><strong>Días a cubrir:</strong> ${sugerido.total}</div>
+                                <div class="cuota-stat">H:${sugerido.habil} V:${sugerido.vispera} F:${sugerido.feriado}</div>
+                            </div>
+                            ${listaDias ? `<ul style="margin: 8px 0 0 0; padding-left: 18px; font-size: 0.88em; color: #78350f;">${listaDias}</ul>` : ''}
+                        </div>
+                    `;
+                    continue;
+                }
+
+                const actual = cuota.actuales;
+                const sugerido = cuota.sugeridos;
+                const proyectado = cuota.proyectado;
+                const claseEstado = cuota.balance === 'NECESITA_MAS' ? 'necesita-mas' : cuota.balance === 'OK' ? 'completo' : '';
+                
+                let estadoBadge = '';
+                let desglose = '';
+                
+                // SIEMPRE mostrar la distribución proyectada
+                if (sugerido.total > 0) {
+                    // Tiene días sugeridos para asignar
+                    estadoBadge = `<span class="cuota-estado necesita">✅ Le tocan: ${sugerido.habil}H, ${sugerido.vispera}V, ${sugerido.feriado}F</span>`;
+                    desglose = `
+                        <div class="cuota-desglose">
+                            <strong>📋 Distribución sugerida:</strong><br>
+                            • ${sugerido.habil} día${sugerido.habil !== 1 ? 's' : ''} hábil${sugerido.habil !== 1 ? 'es' : ''}<br>
+                            • ${sugerido.vispera} víspera${sugerido.vispera !== 1 ? 's' : ''}<br>
+                            • ${sugerido.feriado} feriado${sugerido.feriado !== 1 ? 's' : ''}<br>
+                            <em style="font-size: 0.85em; color: #64748b;">
+                                (Proyectado final: ${proyectado.total} días con ${proyectado.puntos} pts)
+                            </em>
+                        </div>
+                    `;
+                } else if (actual.total > 0) {
+                    // Ya tiene días y no necesita más
+                    estadoBadge = `<span class="cuota-estado ok">✅ Proyectado: ${proyectado.total} días (${proyectado.habil}H, ${proyectado.vispera}V, ${proyectado.feriado}F)</span>`;
+                } else {
+                    // No tiene nada
+                    estadoBadge = '<span class="cuota-estado ok">Sin asignaciones</span>';
+                }
+                
+                personasHTML += `
+                    <div class="cuota-persona-card ${claseEstado}">
+                        <div class="cuota-persona-nombre">
+                            <span style="font-size:0.8em; color:#6b7280; font-weight:600; margin-right:6px;">#${cuota.orden ?? '?'}</span>${persona}<span style="font-size:0.75em; color:#9ca3af; font-weight:400; margin-left:6px;">RINA ${cuota.rina ?? '-'}</span>
+                        </div>
+                        <div class="cuota-persona-stats">
+                            <div class="cuota-stat">
+                                <strong>Actual:</strong> ${actual.total} días
+                            </div>
+                            <div class="cuota-stat">
+                                <strong>Puntos:</strong> ${actual.puntos} / ${cuota.puntos_ideal}
+                            </div>
+                            <div class="cuota-stat">
+                                H:${actual.habil} V:${actual.vispera} F:${actual.feriado}
+                            </div>
+                        </div>
+                        ${estadoBadge}
+                        ${desglose}
+                    </div>
+                `;
+            }
+            
+            document.getElementById('cuotasPersonas').innerHTML = personasHTML;
+            
+            // Mostrar slider y overlay
+            slider.classList.add('active');
+            overlay.classList.add('active');
+        }
+
+        // Cerrar slider de cuotas
+        function cerrarSliderCuotas() {
+            const slider = document.getElementById('cuotasSlider');
+            const overlay = document.getElementById('cuotasSliderOverlay');
+            slider.classList.remove('active');
+            overlay.classList.remove('active');
         }
 
         // Iniciar cuando cargue la página

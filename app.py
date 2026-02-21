@@ -26,6 +26,7 @@ import os
 import json
 from datetime import datetime, date, timedelta
 from collections import defaultdict
+import streamlit as st
 
 app = Flask(__name__)
 CORS(app)
@@ -38,21 +39,35 @@ EXCEL_FILE = "calendario_guardias_2026.xlsx"
 HISTORIAL_FILE = "historial_guardias.json"
 DISPONIBILIDAD_FILE = "disponibilidad.json"
 
-PERSONAS = [
-    "TNIM BUTASSI",
-    "TN MACHUCA",
-    "TNAU BARRIOS",
-    "TF ONETO CAJAL",
-    "TFCO LEDESMA",
-    "TFIM GONZALEZ",
-    "TFIM RACEDO BRITOS",
-    "TF ZALAZAR",
-    "TCCO PALMA",
-    "TC LEDESMA",
-    "GUIM DIAZ",
-    "GUIM TORRES",
-    "GUCO BENITEZ"
+# ============================================================================
+# TABLA DE PERSONAL — fuente única de verdad
+# orden_llenado : quién llena guardia primero (1 = más antiguo, llena antes)
+# nombre        : clave interna usada en Excel, JSON, historial
+# rina          : nro. de matrícula RINA (acredita antigüedad sin discusión)
+# ============================================================================
+PERSONAS_INFO = [
+    {"orden": 1,  "nombre": "TNIM BUTASSI",        "rina": 1490},
+    {"orden": 2,  "nombre": "TNAU BARRIOS",        "rina": 1512},
+    {"orden": 3,  "nombre": "TN MACHUCA",          "rina": 1516},
+    {"orden": 4,  "nombre": "TF ZALAZAR",          "rina": 1650},
+    {"orden": 5,  "nombre": "TF ONETO CAJAL",      "rina": 1789},
+    {"orden": 6,  "nombre": "TFCO LEDESMA",        "rina": 1840},
+    {"orden": 7,  "nombre": "TFIM GONZALEZ",       "rina": 1855},
+    {"orden": 8,  "nombre": "TFIM RACEDO BRITOS",  "rina": 2065},
+    {"orden": 9,  "nombre": "TCCO PALMA",          "rina": 2093},
+    {"orden": 10, "nombre": "TC LEDESMA",          "rina": 2142},
+    {"orden": 11, "nombre": "GUIM DIAZ",           "rina": 2240},
+    {"orden": 12, "nombre": "GUIM TORRES",         "rina": 2260},
+    {"orden": 13, "nombre": "GUCO BENITEZ",        "rina": 2281},
 ]
+
+# Lista de nombres limpios EN EL ORDEN DE LLENADO (más moderno primero).
+# Esta lista es la clave interna usada en todo el sistema.
+PERSONAS = [p["nombre"] for p in PERSONAS_INFO]
+
+# Diccionarios de acceso rápido
+PERSONA_ORDEN = {p["nombre"]: p["orden"] for p in PERSONAS_INFO}
+PERSONA_RINA  = {p["nombre"]: p["rina"]  for p in PERSONAS_INFO}
 
 MESES = [
     "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -653,6 +668,8 @@ def get_disponibilidad():
         # Enriquecer con información de estado
         for persona in disponibilidad:
             disponibilidad[persona]['disponible_hoy'] = persona_disponible(persona)
+            disponibilidad[persona]['orden'] = PERSONA_ORDEN.get(persona, 99)
+            disponibilidad[persona]['rina'] = PERSONA_RINA.get(persona)
         
         return jsonify(disponibilidad)
     except Exception as e:
@@ -714,7 +731,9 @@ def get_personas_activas():
                 "activo": info.get('activo', True),
                 "motivo": info.get('motivo'),
                 "desde": info.get('desde'),
-                "hasta": info.get('hasta')
+                "hasta": info.get('hasta'),
+                "orden": PERSONA_ORDEN.get(persona, 99),
+                "rina": PERSONA_RINA.get(persona)
             })
         
         return jsonify({
@@ -1223,7 +1242,7 @@ def distribucion_automatica(mes):
             activos_dia = obtener_personas_activas(fecha)
             personas_activas_mes.update(activos_dia)
         
-        personas_lista = sorted(list(personas_activas_mes))
+        personas_lista = sorted(list(personas_activas_mes), key=lambda p: PERSONA_ORDEN.get(p, 99))
         num_personas = len(personas_lista)
         
         if num_personas == 0:
@@ -1382,7 +1401,7 @@ def distribucion_automatica(mes):
 def asignar_usuario_a_dia(mes, dia):
     """
     Permite que un usuario se auto-asigne a un día específico.
-    Verifica que el día esté disponible y que no exceda su cuota.
+    Verifica que el día esté disponible y que no exceda su guardia.
     """
     try:
         data = request.json
@@ -1531,6 +1550,9 @@ def distribucion_balancear(mes):
     Distribución inteligente que SOLO llena días pendientes.
     Prioriza a personas con MENOS guardias para lograr equidad.
     
+    Parámetros:
+        solo_calcular (bool): Si es True, solo calcula y muestra sin aplicar cambios
+    
     Perfecto para casos como Febrero donde ya hay días asignados (1-17)
     y solo se quieren llenar los pendientes (18-28) de forma equitativa.
     """
@@ -1540,6 +1562,10 @@ def distribucion_balancear(mes):
         
         if not os.path.exists(EXCEL_FILE):
             return jsonify({"error": "Archivo no encontrado"}), 404
+        
+        # Verificar si solo queremos calcular sin aplicar
+        data = request.json or {}
+        solo_calcular = data.get('solo_calcular', False)
         
         wb = load_workbook(EXCEL_FILE)
         
@@ -1558,7 +1584,7 @@ def distribucion_balancear(mes):
             activos_dia = obtener_personas_activas(fecha)
             personas_activas_mes.update(activos_dia)
         
-        personas_lista = sorted(list(personas_activas_mes))
+        personas_lista = sorted(list(personas_activas_mes), key=lambda p: PERSONA_ORDEN.get(p, 99))
         num_personas = len(personas_lista)
         
         if num_personas == 0:
@@ -1592,7 +1618,7 @@ def distribucion_balancear(mes):
         # Ordenar días pendientes por puntos (más pesados primero)
         dias_pendientes.sort(key=lambda x: x['puntos'], reverse=True)
         
-        print(f"\n📊 DISTRIBUCIÓN BALANCEADA - {mes}")
+        print(f"\n📊 DISTRIBUCIÓN BALANCEADA - {mes} (Solo calcular: {solo_calcular})")
         print(f"Días pendientes: {len(dias_pendientes)}")
         print(f"Personas activas: {num_personas}")
         
@@ -1637,18 +1663,24 @@ def distribucion_balancear(mes):
             conteo_actual[persona_elegida][tipo] += 1
             conteo_actual[persona_elegida]['puntos'] += puntos
         
-        # Aplicar asignaciones al Excel
+        # SOLO APLICAR SI NO ES "solo_calcular"
         cambios = 0
-        for dia_num, asig in asignaciones_nuevas.items():
-            celda_ref = dias[dia_num]['celda_ref']
-            hoja[celda_ref] = asig['persona']
-            cambios += 1
+        if not solo_calcular:
+            for dia_num, asig in asignaciones_nuevas.items():
+                celda_ref = dias[dia_num]['celda_ref']
+                hoja[celda_ref] = asig['persona']
+                cambios += 1
+            
+            wb.save(EXCEL_FILE)
+            print("\n💾 Cambios APLICADOS al Excel")
+        else:
+            cambios = len(asignaciones_nuevas)
+            print("\n📋 Cambios CALCULADOS (no aplicados)")
         
-        wb.save(EXCEL_FILE)
         wb.close()
         
         # Estado final
-        print("\n📋 Estado Final:")
+        print("\n📋 Estado Final (proyectado):")
         for persona in sorted(conteo_actual.keys(), key=lambda p: conteo_actual[p]['total'], reverse=True):
             datos = conteo_actual[persona]
             print(f"  {persona}: {datos['total']} días ({datos['puntos']:.1f} pts) - H:{datos['habil']} V:{datos['vispera']} F:{datos['feriado']}")
@@ -1659,18 +1691,22 @@ def distribucion_balancear(mes):
         puntos_max = max(puntos_values)
         diferencia = puntos_max - puntos_min
         
-        # Registrar en historial
-        registrar_en_historial({
-            "accion": "distribucion_balanceada",
-            "mes": mes,
-            "cambios": cambios,
-            "diferencia_final": round(diferencia, 2)
-        })
+        # Registrar en historial solo si se aplicó
+        if not solo_calcular:
+            registrar_en_historial({
+                "accion": "distribucion_balanceada",
+                "mes": mes,
+                "cambios": cambios,
+                "diferencia_final": round(diferencia, 2)
+            })
+        
+        mensaje_base = "calculada" if solo_calcular else "completada"
         
         return jsonify({
             "success": True,
-            "mensaje": f"✅ Distribución balanceada completada para {mes}",
+            "mensaje": f"✅ Distribución balanceada {mensaje_base} para {mes}",
             "mes": mes,
+            "solo_calcular": solo_calcular,
             "dias_pendientes_asignados": cambios,
             "dias_que_ya_estaban": len(dias) - len(dias_pendientes),
             "personas_participantes": num_personas,
@@ -1838,10 +1874,10 @@ def resetear_mes(mes):
         return jsonify({"error": str(e)}), 500
 
 
-@app.route('/api/cuotas/sugeridas/<mes>', methods=['GET'])
-def calcular_cuotas_sugeridas(mes):
+@app.route('/api/guardias/sugeridas/<mes>', methods=['GET'])
+def calcular_guardias_sugeridas(mes):
     """
-    Calcula cuotas sugeridas para cada persona SIN asignar automáticamente.
+    Calcula guardias sugeridas para cada persona SIN asignar automáticamente.
     Muestra cuántos días de cada tipo debería tener cada persona para balance equitativo.
     """
     try:
@@ -1869,7 +1905,7 @@ def calcular_cuotas_sugeridas(mes):
             activos_dia = obtener_personas_activas(fecha)
             personas_activas_mes.update(activos_dia)
         
-        personas_lista = sorted(list(personas_activas_mes))
+        personas_lista = sorted(list(personas_activas_mes), key=lambda p: PERSONA_ORDEN.get(p, 99))
         num_personas = len(personas_lista)
         
         if num_personas == 0:
@@ -1897,9 +1933,9 @@ def calcular_cuotas_sugeridas(mes):
                 # Día disponible
                 dias_disponibles_por_tipo[tipo].append(dia_num)
         
-        # Calcular cuota ideal total
+        # Calcular guardia ideal total
         total_dias = len(dias)
-        cuota_ideal = total_dias / num_personas
+        guardia_ideal = total_dias / num_personas
         
         # Calcular puntos totales del mes
         puntos_totales = sum(len(dias_disponibles_por_tipo[t]) * PUNTOS[t] for t in ['habil', 'vispera', 'feriado'])
@@ -1909,15 +1945,15 @@ def calcular_cuotas_sugeridas(mes):
         puntos_ideal_por_persona = puntos_totales / num_personas
         
         # Calcular cuántos días más necesita cada persona
-        cuotas_sugeridas = {}
+        guardias_sugeridas = {}
         for persona in personas_lista:
             actual = asignados_actuales[persona]
-            faltan_dias = max(0, cuota_ideal - actual['total'])
+            faltan_dias = max(0, guardia_ideal - actual['total'])
             faltan_puntos = max(0, puntos_ideal_por_persona - actual['puntos'])
             
-            cuotas_sugeridas[persona] = {
+            guardias_sugeridas[persona] = {
                 'actuales': actual,
-                'cuota_ideal_total': round(cuota_ideal, 1),
+                'guardia_ideal_total': round(guardia_ideal, 1),
                 'faltan_dias': round(faltan_dias, 1),
                 'puntos_ideal': round(puntos_ideal_por_persona, 1),
                 'faltan_puntos': round(faltan_puntos, 1),
@@ -1935,8 +1971,244 @@ def calcular_cuotas_sugeridas(mes):
                 "vispera": len(dias_disponibles_por_tipo['vispera']),
                 "feriado": len(dias_disponibles_por_tipo['feriado'])
             },
-            "cuota_ideal_por_persona": round(cuota_ideal, 1),
+            "guardia_ideal_por_persona": round(guardia_ideal, 1),
             "puntos_ideal_por_persona": round(puntos_ideal_por_persona, 1),
+            "personas_activas": num_personas,
+            "guardias_sugeridas": guardias_sugeridas
+        })
+        
+    except Exception as e:
+        import traceback
+        print(f"Error en guardias sugeridas: {traceback.format_exc()}")
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/cuotas/sugeridas/<mes>', methods=['GET'])
+def calcular_cuotas_sugeridas(mes):
+    """
+    Calcula las cuotas sugeridas EXACTAS para cada persona usando el algoritmo de distribución automática.
+    SOLO SIMULA - NO guarda en Excel.
+    """
+    try:
+        if mes not in MESES:
+            return jsonify({"error": f"Mes '{mes}' no válido"}), 400
+        
+        if not os.path.exists(EXCEL_FILE):
+            return jsonify({"error": "Archivo no encontrado"}), 404
+        
+        wb = load_workbook(EXCEL_FILE)
+        
+        if mes not in wb.sheetnames:
+            wb.close()
+            return jsonify({"error": f"Mes '{mes}' no encontrado"}), 404
+        
+        hoja = wb[mes]
+        dias = obtener_dias_del_mes_mejorado(hoja, mes)
+        
+        # NO cerrar wb todavía - lo necesitamos para simular
+        
+        # Obtener personas activas
+        mes_num = MAP_MESES[mes]
+        personas_activas_mes = set()
+        for dia_num, info in dias.items():
+            fecha = info.get('fecha')
+            activos_dia = obtener_personas_activas(fecha)
+            personas_activas_mes.update(activos_dia)
+        
+        personas_lista = sorted(list(personas_activas_mes), key=lambda p: PERSONA_ORDEN.get(p, 99))
+        num_personas = len(personas_lista)
+        
+        if num_personas == 0:
+            wb.close()
+            return jsonify({"error": "No hay personas activas disponibles"}), 400
+        
+        # ============================================================================
+        # USAR EL MISMO ALGORITMO DE DISTRIBUCIÓN AUTOMÁTICA (MODO SIMULACIÓN)
+        # ============================================================================
+        
+        PUNTOS = {'habil': 1.0, 'vispera': 1.5, 'feriado': 2.0}
+        
+        # Contar asignaciones ACTUALES (antes de simular)
+        asignados_antes = {p: {'habil': 0, 'vispera': 0, 'feriado': 0, 'total': 0, 'puntos': 0.0} for p in personas_lista}
+        
+        for dia_num, info in dias.items():
+            persona = info.get('persona')
+            tipo = info['tipo']
+            
+            if persona and persona in asignados_antes:
+                asignados_antes[persona][tipo] += 1
+                asignados_antes[persona]['total'] += 1
+                asignados_antes[persona]['puntos'] += PUNTOS[tipo]
+        
+        # SIMULAR distribución completa (como distribución_automatica pero sin guardar)
+        # Crear copia de hoja para simular
+        from copy import deepcopy
+        dias_simulados = deepcopy(dias)
+        
+        # Resetear todas las asignaciones en la simulación
+        for dia_num in dias_simulados:
+            dias_simulados[dia_num]['persona'] = None
+        
+        # Algoritmo de distribución (igual que distribucion_automatica)
+        conteo_simulado = {p: {'total': 0, 'puntos': 0.0, 'habil': 0, 'vispera': 0, 'feriado': 0} for p in personas_lista}
+        
+        # Ordenar días por peso (feriado > víspera > hábil)
+        dias_ordenados = sorted(
+            dias_simulados.items(),
+            key=lambda x: PUNTOS[x[1]['tipo']],
+            reverse=True
+        )
+        
+        # Inicializar conteo para DNRD
+        conteo_simulado['DNRD'] = {'total': 0, 'puntos': 0.0, 'habil': 0, 'vispera': 0, 'feriado': 0, 'dias': []}
+        
+        # Asignar cada día a quien tenga menos puntos
+        for dia_num, info in dias_ordenados:
+            tipo = info['tipo']
+            fecha = info['fecha']
+            puntos = PUNTOS[tipo]
+            
+            # Encontrar personas disponibles
+            personas_disponibles = [
+                p for p in personas_lista
+                if persona_disponible(p, fecha)
+            ]
+            
+            if not personas_disponibles:
+                # Nadie disponible -> DNRD cubre este día
+                conteo_simulado['DNRD']['total'] += 1
+                conteo_simulado['DNRD'][tipo] += 1
+                conteo_simulado['DNRD']['puntos'] += puntos
+                conteo_simulado['DNRD']['dias'].append({'dia': dia_num, 'fecha': fecha, 'tipo': tipo})
+                continue
+            
+            # Ordenar por puntos acumulados (menos primero)
+            personas_disponibles.sort(key=lambda p: (conteo_simulado[p]['puntos'], conteo_simulado[p]['total']))
+            
+            # Asignar al primero
+            persona_elegida = personas_disponibles[0]
+            
+            # Actualizar conteo simulado
+            conteo_simulado[persona_elegida]['total'] += 1
+            conteo_simulado[persona_elegida][tipo] += 1
+            conteo_simulado[persona_elegida]['puntos'] += puntos
+        
+        wb.close()
+        
+        # ============================================================================
+        # CALCULAR SUGERENCIAS (diferencia entre simulado y actual)
+        # ============================================================================
+        
+        total_dias = len(dias)
+        cuota_ideal = total_dias / num_personas
+        puntos_totales = sum(conteo_simulado[p]['puntos'] for p in personas_lista)
+        puntos_ideal = puntos_totales / num_personas
+        
+        cuotas_sugeridas = {}
+        for persona in personas_lista:
+            antes = asignados_antes[persona]
+            despues = conteo_simulado[persona]
+            
+            # Calcular sugeridos (diferencia)
+            sugerido_habil = despues['habil'] - antes['habil']
+            sugerido_vispera = despues['vispera'] - antes['vispera']
+            sugerido_feriado = despues['feriado'] - antes['feriado']
+            
+            # Determinar balance
+            diferencia = despues['total'] - cuota_ideal
+            
+            if abs(diferencia) < 0.5:
+                balance = 'OK'
+            elif diferencia < 0:
+                balance = 'NECESITA_MAS'
+            else:
+                balance = 'TIENE_DEMAS'
+            
+            cuotas_sugeridas[persona] = {
+                'actuales': {
+                    'habil': antes['habil'],
+                    'vispera': antes['vispera'],
+                    'feriado': antes['feriado'],
+                    'total': antes['total'],
+                    'puntos': round(antes['puntos'], 1)
+                },
+                'sugeridos': {
+                    'habil': sugerido_habil,
+                    'vispera': sugerido_vispera,
+                    'feriado': sugerido_feriado,
+                    'total': sugerido_habil + sugerido_vispera + sugerido_feriado
+                },
+                'proyectado': {
+                    'habil': despues['habil'],
+                    'vispera': despues['vispera'],
+                    'feriado': despues['feriado'],
+                    'total': despues['total'],
+                    'puntos': round(despues['puntos'], 1)
+                },
+                'cuota_ideal_total': round(cuota_ideal, 1),
+                'puntos_ideal': round(puntos_ideal, 1),
+                'balance': balance,
+                'orden': PERSONA_ORDEN.get(persona, 99),
+                'rina': PERSONA_RINA.get(persona)
+            }
+        
+        # Agregar info de DNRD si hubo días sin personal disponible
+        dnrd_info = conteo_simulado.get('DNRD', {'total': 0, 'habil': 0, 'vispera': 0, 'feriado': 0, 'puntos': 0.0, 'dias': []})
+        if dnrd_info['total'] > 0:
+            cuotas_sugeridas['DNRD'] = {
+                'actuales': {'habil': 0, 'vispera': 0, 'feriado': 0, 'total': 0, 'puntos': 0.0},
+                'sugeridos': {
+                    'habil': dnrd_info['habil'],
+                    'vispera': dnrd_info['vispera'],
+                    'feriado': dnrd_info['feriado'],
+                    'total': dnrd_info['total']
+                },
+                'proyectado': {
+                    'habil': dnrd_info['habil'],
+                    'vispera': dnrd_info['vispera'],
+                    'feriado': dnrd_info['feriado'],
+                    'total': dnrd_info['total'],
+                    'puntos': round(dnrd_info['puntos'], 1)
+                },
+                'dias_especificos': dnrd_info.get('dias', []),
+                'cuota_ideal_total': 0,
+                'puntos_ideal': 0,
+                'balance': 'DNRD',
+                'es_dnrd': True
+            }
+
+        # Logs para verificación
+        print(f"\n📊 CUOTAS SUGERIDAS - {mes}")
+        print(f"Total días: {total_dias}")
+        print(f"Personas activas: {num_personas}")
+        print(f"Cuota ideal: {cuota_ideal:.1f} días/persona")
+        if dnrd_info['total'] > 0:
+            print(f"  ⚠️  DNRD: {dnrd_info['total']} días sin personal disponible")
+        
+        total_proyectado = sum(c['proyectado']['total'] for c in cuotas_sugeridas.values())
+        print(f"\n✅ Total proyectado: {total_proyectado} (debe ser {total_dias})")
+        
+        for persona in sorted(personas_lista):
+            c = cuotas_sugeridas[persona]
+            print(f"  {persona}: {c['actuales']['total']} + {c['sugeridos']['total']} = {c['proyectado']['total']}")
+        
+        # Calcular disponibles
+        dias_ya_asignados = sum(antes['total'] for antes in asignados_antes.values())
+        dias_disponibles = total_dias - dias_ya_asignados
+        
+        return jsonify({
+            "success": True,
+            "mes": mes,
+            "total_dias_mes": total_dias,
+            "dias_asignados": dias_ya_asignados,
+            "dias_disponibles": dias_disponibles,
+            "disponibles_por_tipo": {
+                "habil": sum(1 for d in dias.values() if d['tipo'] == 'habil' and not d.get('persona')),
+                "vispera": sum(1 for d in dias.values() if d['tipo'] == 'vispera' and not d.get('persona')),
+                "feriado": sum(1 for d in dias.values() if d['tipo'] == 'feriado' and not d.get('persona'))
+            },
+            "cuota_ideal_por_persona": round(cuota_ideal, 1),
+            "puntos_ideal_por_persona": round(puntos_ideal, 1),
             "personas_activas": num_personas,
             "cuotas_sugeridas": cuotas_sugeridas
         })
@@ -1945,8 +2217,6 @@ def calcular_cuotas_sugeridas(mes):
         import traceback
         print(f"Error en cuotas sugeridas: {traceback.format_exc()}")
         return jsonify({"error": str(e)}), 500
-
-
 @app.route('/api/descargar')
 def descargar_excel():
     """Descarga el archivo Excel actualizado"""
@@ -1987,14 +2257,22 @@ if __name__ == '__main__':
     # Inicializar calendario
     inicializar_calendario()
     
-    print("""
+    # Obtener puerto desde variable de entorno (Render lo asigna automáticamente)
+    port = int(os.environ.get('PORT', 5000))
+    
+    print(f"""
     🌐 Accede a la aplicación en:
-       http://localhost:5000
+       http://localhost:{port}
     
     📱 Desde otro dispositivo en la misma red:
-       http://[TU_IP]:5000
+       http://[TU_IP]:{port}
     
     ⏹️  Para detener: Ctrl+C
     """)
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # En producción (Render): debug=False
+    # En desarrollo local: debug=True
+    debug_mode = os.environ.get('FLASK_ENV') != 'production'
+    
+    app.run(debug=debug_mode, host='0.0.0.0', port=port)
+

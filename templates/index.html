@@ -1256,6 +1256,10 @@
                 <p><strong>Tipo:</strong> <span id="modalTipo">-</span></p>
             </div>
 
+            <div id="modalPermisoAviso" style="display:none; background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:10px 14px; font-size:0.85rem; color:#1d4ed8; margin-bottom:12px;">
+                🔒 Este día ya está asignado a otra persona. Solo podés modificar tus propias guardias.
+            </div>
+
             <div class="form-group">
                 <label>Persona Asignada</label>
                 <select id="modalPersonaSelect"></select>
@@ -1335,6 +1339,124 @@
         </div>
     </div>
 
+    <!-- Modal de Login -->
+    <div id="modalLogin" style="
+        position: fixed; top:0; left:0; width:100%; height:100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        z-index: 9999; display:flex; align-items:center; justify-content:center;
+        flex-direction: column;
+    ">
+        <div style="background:white; border-radius:20px; padding:40px; width:100%; max-width:420px; box-shadow:0 25px 50px rgba(0,0,0,0.3);">
+            <div style="text-align:center; margin-bottom:30px;">
+                <div style="font-size:3rem; margin-bottom:10px;">🛡️</div>
+                <h2 style="color:#1f2937; margin-bottom:5px;">Gestor de Guardias 2026</h2>
+                <p id="loginSubtitulo" style="color:#6b7280; font-size:0.9rem;">Ingresá con tu número de usuario</p>
+            </div>
+
+            <!-- Formulario Login -->
+            <div id="formLogin">
+                <div style="margin-bottom:20px;">
+                    <label style="display:block; font-weight:600; color:#374151; margin-bottom:6px; font-size:0.9rem;">Número de usuario</label>
+                    <input id="loginId" type="text" placeholder="Tu número personal"
+                        style="width:100%; padding:12px 16px; border:2px solid #e5e7eb; border-radius:10px; font-size:1rem; outline:none; transition:border 0.2s;"
+                        onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='#e5e7eb'"
+                        onkeydown="if(event.key==='Enter') document.getElementById('loginClave').focus()">
+                </div>
+                <div style="margin-bottom:24px;">
+                    <label style="display:block; font-weight:600; color:#374151; margin-bottom:6px; font-size:0.9rem;">Contraseña</label>
+                    <input id="loginClave" type="password" placeholder="Tu contraseña"
+                        style="width:100%; padding:12px 16px; border:2px solid #e5e7eb; border-radius:10px; font-size:1rem; outline:none; transition:border 0.2s;"
+                        onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='#e5e7eb'"
+                        onkeydown="if(event.key==='Enter') doLogin()">
+                </div>
+                <button onclick="doLogin()" style="
+                    width:100%; padding:14px; background:linear-gradient(135deg,#6366f1,#8b5cf6);
+                    color:white; border:none; border-radius:10px; font-size:1rem; font-weight:600;
+                    cursor:pointer; transition:opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                    Ingresar →
+                </button>
+                <button onclick="mostrarFormConfigurar()" style="
+                    width:100%; padding:10px; background:none; border:none;
+                    color:#6366f1; font-size:0.9rem; cursor:pointer; margin-top:12px;">
+                    Primera vez — Crear cuenta
+                </button>
+                <div id="loginError" style="display:none; background:#fef2f2; border:1px solid #fca5a5; color:#dc2626; padding:10px 14px; border-radius:8px; font-size:0.9rem; margin-top:12px;"></div>
+            </div>
+
+            <!-- Formulario Configurar (primera vez) -->
+            <div id="formConfigurar" style="display:none;">
+                <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:12px; margin-bottom:20px; font-size:0.85rem; color:#1d4ed8;">
+                    ⓘ Elegí un número de usuario (el que quieras), seleccioná tu nombre y creá tu contraseña.
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block; font-weight:600; color:#374151; margin-bottom:6px; font-size:0.9rem;">Número de usuario (elegí uno)</label>
+                    <input id="confId" type="text" placeholder="Ej: 42, 007, 1234..."
+                        style="width:100%; padding:12px 16px; border:2px solid #e5e7eb; border-radius:10px; font-size:1rem; outline:none;"
+                        onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block; font-weight:600; color:#374151; margin-bottom:6px; font-size:0.9rem;">Tu nombre</label>
+                    <select id="confNombre" style="width:100%; padding:12px 16px; border:2px solid #e5e7eb; border-radius:10px; font-size:0.95rem; outline:none; background:white;"
+                        onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='#e5e7eb'">
+                        <option value="">-- Seleccioná tu nombre --</option>
+                        <option>TNIM BUTASSI</option>
+                        <option>TNAU BARRIOS</option>
+                        <option>TN MACHUCA</option>
+                        <option>TF ZALAZAR</option>
+                        <option>TF ONETO CAJAL</option>
+                        <option>TFCO LEDESMA</option>
+                        <option>TFIM GONZALEZ</option>
+                        <option>TFIM RACEDO BRITOS</option>
+                        <option>TCCO PALMA</option>
+                        <option>TC LEDESMA</option>
+                        <option>GUIM DIAZ</option>
+                        <option>GUIM TORRES</option>
+                        <option>GUCO BENITEZ</option>
+                    </select>
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block; font-weight:600; color:#374151; margin-bottom:6px; font-size:0.9rem;">Contraseña</label>
+                    <input id="confClave" type="password" placeholder="Mínimo 4 caracteres"
+                        style="width:100%; padding:12px 16px; border:2px solid #e5e7eb; border-radius:10px; font-size:1rem; outline:none;"
+                        onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+                <div style="margin-bottom:24px;">
+                    <label style="display:block; font-weight:600; color:#374151; margin-bottom:6px; font-size:0.9rem;">Confirmar contraseña</label>
+                    <input id="confClaveConf" type="password" placeholder="Repetí la contraseña"
+                        style="width:100%; padding:12px 16px; border:2px solid #e5e7eb; border-radius:10px; font-size:1rem; outline:none;"
+                        onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='#e5e7eb'"
+                        onkeydown="if(event.key==='Enter') doConfigurar()">
+                </div>
+                <button onclick="doConfigurar()" style="
+                    width:100%; padding:14px; background:linear-gradient(135deg,#059669,#10b981);
+                    color:white; border:none; border-radius:10px; font-size:1rem; font-weight:600; cursor:pointer;">
+                    ✅ Crear cuenta
+                </button>
+                <button onclick="mostrarFormLogin()" style="
+                    width:100%; padding:10px; background:none; border:none;
+                    color:#6b7280; font-size:0.9rem; cursor:pointer; margin-top:12px;">
+                    ← Volver al login
+                </button>
+                <div id="confError" style="display:none; background:#fef2f2; border:1px solid #fca5a5; color:#dc2626; padding:10px 14px; border-radius:8px; font-size:0.9rem; margin-top:12px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra de usuario (se muestra cuando está logueado) -->
+    <div id="barraUsuario" style="
+        display:none; position:fixed; top:15px; right:20px; z-index:1000;
+        background:white; border-radius:12px; padding:10px 16px;
+        box-shadow:0 4px 15px rgba(0,0,0,0.15);
+        align-items:center; gap:12px; font-size:0.9rem;
+    ">
+        <span>👤 <strong id="barraUsuarioNombre"></strong></span>
+        <button onclick="doLogout()" style="
+            background:#fee2e2; color:#dc2626; border:none; border-radius:6px;
+            padding:5px 10px; font-size:0.8rem; cursor:pointer; font-weight:600;">
+            Salir
+        </button>
+    </div>
+
     <script>
         // Variables globales
         let mesActual = null;
@@ -1343,6 +1465,156 @@
         let diaSeleccionado = null;
         let usuarioSeleccionado = null;
         let estadisticasUsuarios = {};
+
+        // Estado de sesión del usuario
+        let sesionUsuario = null;
+
+        // ============================================================================
+        // AUTENTICACIÓN
+        // ============================================================================
+
+        async function verificarSesion() {
+            try {
+                const resp = await fetch('/api/auth/estado', {credentials:'include'});
+                const data = await resp.json();
+                if (data.autenticado) {
+                    sesionUsuario = { id: data.usuario_id, nombre: data.nombre };
+                    mostrarAppConUsuario();
+                    return true;
+                }
+            } catch(e) {}
+            return false;
+        }
+
+        function mostrarAppConUsuario() {
+            document.getElementById('modalLogin').style.display = 'none';
+            const barra = document.getElementById('barraUsuario');
+            barra.style.display = 'flex';
+            document.getElementById('barraUsuarioNombre').textContent = sesionUsuario.nombre;
+        }
+
+        function mostrarFormLogin() {
+            document.getElementById('formLogin').style.display = 'block';
+            document.getElementById('formConfigurar').style.display = 'none';
+            document.getElementById('loginError').style.display = 'none';
+        }
+
+        function mostrarFormConfigurar() {
+            document.getElementById('formLogin').style.display = 'none';
+            document.getElementById('formConfigurar').style.display = 'block';
+            document.getElementById('confError').style.display = 'none';
+            // Copiar el número escrito en el login, si lo había
+            const idLogin = document.getElementById('loginId').value;
+            if (idLogin) document.getElementById('confId').value = idLogin;
+            setTimeout(() => document.getElementById('confId').focus(), 50);
+        }
+
+        async function doLogin() {
+            const usuario_id = (document.getElementById('loginId').value || '').trim();
+            const clave = (document.getElementById('loginClave').value || '').trim();
+            const errEl = document.getElementById('loginError');
+            errEl.style.display = 'none';
+
+            if (!usuario_id) {
+                errEl.textContent = 'Ingresá tu número de usuario';
+                errEl.style.display = 'block';
+                document.getElementById('loginId').focus(); return;
+            }
+            if (!clave) {
+                errEl.textContent = 'Ingresá tu contraseña';
+                errEl.style.display = 'block';
+                document.getElementById('loginClave').focus(); return;
+            }
+
+            try {
+                const resp = await fetch('/api/auth/login', {
+                    method: 'POST', credentials: 'include',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({usuario_id, clave})
+                });
+                const data = await resp.json();
+
+                if (resp.ok) {
+                    sesionUsuario = { id: data.usuario_id, nombre: data.nombre };
+                    mostrarAppConUsuario();
+                    await init();
+                } else if (data.error === 'cuenta_no_configurada') {
+                    document.getElementById('confId').value = usuario_id;
+                    mostrarFormConfigurar();
+                } else {
+                    errEl.textContent = data.error || 'Error al ingresar';
+                    errEl.style.display = 'block';
+                }
+            } catch(e) {
+                errEl.textContent = 'Error de conexión con el servidor';
+                errEl.style.display = 'block';
+            }
+        }
+
+        async function doConfigurar() {
+            const idEl = document.getElementById('confId');
+            const nomEl = document.getElementById('confNombre');
+            const claveEl = document.getElementById('confClave');
+            const confEl = document.getElementById('confClaveConf');
+            const errEl = document.getElementById('confError');
+            errEl.style.display = 'none';
+
+            const usuario_id = (idEl.value || '').trim();
+            const nombre = (nomEl.value || '').trim();
+            const clave = (claveEl.value || '').trim();
+            const conf = (confEl.value || '').trim();
+
+            if (!usuario_id) {
+                errEl.textContent = 'Ingresá un número de usuario'; errEl.style.display = 'block'; idEl.focus(); return;
+            }
+            if (!nombre) {
+                errEl.textContent = 'Seleccioná tu nombre de la lista'; errEl.style.display = 'block'; nomEl.focus(); return;
+            }
+            if (!clave) {
+                errEl.textContent = 'Ingresá una contraseña'; errEl.style.display = 'block'; claveEl.focus(); return;
+            }
+            if (clave.length < 4) {
+                errEl.textContent = 'La contraseña debe tener al menos 4 caracteres'; errEl.style.display = 'block'; claveEl.focus(); return;
+            }
+            if (clave !== conf) {
+                errEl.textContent = 'Las contraseñas no coinciden'; errEl.style.display = 'block'; confEl.focus(); return;
+            }
+
+            try {
+                const resp = await fetch('/api/auth/configurar', {
+                    method: 'POST', credentials: 'include',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({usuario_id, nombre, clave, clave_confirm: conf})
+                });
+                const data = await resp.json();
+
+                if (resp.ok) {
+                    sesionUsuario = { id: data.usuario_id, nombre: data.nombre };
+                    mostrarAppConUsuario();
+                    await init();
+                } else {
+                    errEl.textContent = data.error || 'Error al crear cuenta';
+                    errEl.style.display = 'block';
+                }
+            } catch(e) {
+                errEl.textContent = 'Error de conexión con el servidor';
+                errEl.style.display = 'block';
+            }
+        }
+
+        async function doLogout() {
+            await fetch('/api/auth/logout', {method:'POST', credentials:'include'});
+            sesionUsuario = null;
+            document.getElementById('barraUsuario').style.display = 'none';
+            document.getElementById('modalLogin').style.display = 'flex';
+            document.getElementById('loginId').value = '';
+            document.getElementById('loginClave').value = '';
+            mostrarFormLogin();
+        }
+
+        // ============================================================================
+        // INICIALIZACIÓN
+        // ============================================================================
 
         // Inicializar aplicación
         async function init() {
@@ -1596,7 +1868,12 @@
             const respActivas = await fetch(`/api/personas/activas?fecha=${info.fecha}`);
             const dataActivas = await respActivas.json();
             
+            // CONTROL DE PERMISOS: solo se puede elegir a sí mismo
+            const miNombre = sesionUsuario ? sesionUsuario.nombre : null;
+
             dataActivas.personas.forEach(p => {
+                // Solo agregar la opción del usuario logueado
+                if (miNombre && p.nombre !== miNombre) return;
                 const option = document.createElement('option');
                 option.value = p.nombre;
                 option.textContent = p.nombre;
@@ -1605,9 +1882,22 @@
                 }
                 select.appendChild(option);
             });
+
+            // Si el día ya tiene asignada otra persona, mostrar como info
+            if (info.persona && info.persona !== miNombre) {
+                select.innerHTML = `<option value="${info.persona}" disabled selected>${info.persona} (asignado)</option>`;
+                select.disabled = true;
+                document.getElementById('modalPermisoAviso').style.display = 'block';
+                document.querySelector('#modalAsignar .btn-success').disabled = true;
+            } else {
+                select.disabled = false;
+                document.getElementById('modalPermisoAviso').style.display = 'none';
+                document.querySelector('#modalAsignar .btn-success').disabled = false;
+            }
             
-            // Mostrar botón eliminar si hay persona asignada
-            document.getElementById('btnEliminar').style.display = info.persona ? 'block' : 'none';
+            // Mostrar botón eliminar solo si la guardia es del usuario actual
+            const esPropia = info.persona && info.persona === miNombre;
+            document.getElementById('btnEliminar').style.display = esPropia ? 'block' : 'none';
             
             // Obtener sugerencia
             try {
@@ -1639,6 +1929,7 @@
             try {
                 const response = await fetch('/api/asignar', {
                     method: 'POST',
+                    credentials: 'include',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         mes: mesActual,
@@ -1665,6 +1956,7 @@
                             // Reintentar con forzar = true
                             const response2 = await fetch('/api/asignar', {
                                 method: 'POST',
+                                credentials: 'include',
                                 headers: {'Content-Type': 'application/json'},
                                 body: JSON.stringify({
                                     mes: mesActual,
@@ -1706,6 +1998,7 @@
             try {
                 const response = await fetch('/api/eliminar', {
                     method: 'POST',
+                    credentials: 'include',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         mes: mesActual,
@@ -3049,8 +3342,13 @@
             overlay.classList.remove('active');
         }
 
-        // Iniciar cuando cargue la página
-        window.onload = init;
+        // Iniciar cuando cargue la página — verificar sesión primero
+        window.onload = async function() {
+            const logueado = await verificarSesion();
+            if (logueado) {
+                await init();
+            }
+        };
     </script>
 </body>
 </html>

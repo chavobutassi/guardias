@@ -41,6 +41,6 @@ echo ========================================
 echo.
 echo Para ejecutar la aplicacion:
 echo   1. Ejecuta: python app.py
-echo   2. Abre tu navegador en: http://localhost:5000
+echo   2. Abre tu navegador en: http://localhost:10000
 echo.
 pause

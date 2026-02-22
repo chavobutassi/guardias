@@ -1226,5 +1226,12 @@
     "despues": "TNIM BUTASSI",
     "forzado": false,
     "timestamp": "2026-02-21T15:38:26.292113"
+  },
+  {
+    "accion": "eliminar",
+    "mes": "Marzo",
+    "dia": 2,
+    "persona": "TNIM BUTASSI",
+    "timestamp": "2026-02-22T12:13:34.139770"
   }
 ]

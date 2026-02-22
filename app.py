@@ -16,7 +16,7 @@ Autor: Sistema de Gestión de Guardias
 Versión: 4.0 - Con Generador Integrado
 """
 
-from flask import Flask, render_template, request, jsonify, send_file
+from flask import Flask, render_template, request, jsonify, send_file, session
 from flask_cors import CORS
 import openpyxl
 from openpyxl import Workbook, load_workbook
@@ -24,11 +24,14 @@ from openpyxl.styles import PatternFill
 from openpyxl.utils import get_column_letter
 import os
 import json
+import hashlib
+import secrets
 from datetime import datetime, date, timedelta
 from collections import defaultdict
 
 app = Flask(__name__)
-CORS(app)
+app.secret_key = os.environ.get('SECRET_KEY', secrets.token_hex(32))
+CORS(app, supports_credentials=True)
 
 # ============================================================================
 # CONFIGURACIÓN
@@ -37,6 +40,7 @@ CORS(app)
 EXCEL_FILE = "calendario_guardias_2026.xlsx"
 HISTORIAL_FILE = "historial_guardias.json"
 DISPONIBILIDAD_FILE = "disponibilidad.json"
+USUARIOS_FILE = "usuarios.json"
 
 # ============================================================================
 # TABLA DE PERSONAL — fuente única de verdad
@@ -635,6 +639,179 @@ def registrar_en_historial(evento):
 
 
 # ============================================================================
+# SISTEMA DE AUTENTICACIÓN
+# ============================================================================
+
+def hash_password(password):
+    """Hash de contraseña con SHA-256"""
+    return hashlib.sha256(password.encode('utf-8')).hexdigest()
+
+
+def cargar_usuarios():
+    """Carga los usuarios registrados desde archivo JSON"""
+    if not os.path.exists(USUARIOS_FILE):
+        return {}
+    with open(USUARIOS_FILE, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+
+def guardar_usuarios(usuarios):
+    """Guarda los usuarios en archivo JSON"""
+    with open(USUARIOS_FILE, 'w', encoding='utf-8') as f:
+        json.dump(usuarios, f, indent=2, ensure_ascii=False)
+
+
+def login_requerido(f):
+    from functools import wraps
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if 'usuario_id' not in session:
+            return jsonify({"error": "No autenticado", "redirect": "/login"}), 401
+        return f(*args, **kwargs)
+    return decorated
+
+
+def puede_modificar_persona(persona):
+    if 'usuario_nombre' not in session:
+        return False
+    return session['usuario_nombre'] == persona
+
+
+# ============================================================================
+# ENDPOINTS DE AUTENTICACIÓN
+# ============================================================================
+
+@app.route('/api/auth/estado')
+def auth_estado():
+    """Retorna el estado de autenticación actual"""
+    if 'usuario_id' in session:
+        return jsonify({
+            "autenticado": True,
+            "usuario_id": session['usuario_id'],
+            "nombre": session['usuario_nombre']
+        })
+    return jsonify({"autenticado": False})
+
+
+@app.route('/api/auth/login', methods=['POST'])
+def auth_login():
+    """Login con número de usuario y contraseña"""
+    data = request.json or {}
+    usuario_id = str(data.get('usuario_id', '')).strip()
+    clave = data.get('clave', '').strip()
+
+    if not usuario_id or not clave:
+        return jsonify({"error": "Ingresá tu número de usuario y contraseña"}), 400
+
+    usuarios = cargar_usuarios()
+
+    if usuario_id not in usuarios:
+        return jsonify({
+            "error": "cuenta_no_configurada",
+            "mensaje": "Este número no tiene cuenta. ¿Primera vez?",
+            "usuario_id": usuario_id
+        }), 403
+
+    if usuarios[usuario_id]['hash'] != hash_password(clave):
+        return jsonify({"error": "Contraseña incorrecta"}), 401
+
+    nombre = usuarios[usuario_id]['nombre']
+    session['usuario_id'] = usuario_id
+    session['usuario_nombre'] = nombre
+
+    return jsonify({
+        "success": True,
+        "usuario_id": usuario_id,
+        "nombre": nombre,
+        "mensaje": f"Bienvenido, {nombre}"
+    })
+
+
+@app.route('/api/auth/configurar', methods=['POST'])
+def auth_configurar():
+    """Configura la cuenta la primera vez: número libre + nombre de la lista + clave"""
+    data = request.json or {}
+    usuario_id = str(data.get('usuario_id', '')).strip()
+    nombre = str(data.get('nombre', '')).strip()
+    clave = data.get('clave', '').strip()
+    clave_confirm = data.get('clave_confirm', '').strip()
+
+    if not usuario_id or not nombre or not clave:
+        return jsonify({"error": "Completá todos los campos"}), 400
+
+    if len(clave) < 4:
+        return jsonify({"error": "La contraseña debe tener al menos 4 caracteres"}), 400
+
+    if clave != clave_confirm:
+        return jsonify({"error": "Las contraseñas no coinciden"}), 400
+
+    if nombre not in PERSONAS:
+        return jsonify({"error": "Nombre no válido"}), 400
+
+    usuarios = cargar_usuarios()
+
+    # Verificar que el número de usuario no esté en uso
+    if usuario_id in usuarios:
+        return jsonify({"error": "Ese número de usuario ya está en uso. Elegí otro."}), 400
+
+    # Verificar que el nombre no esté ya registrado por otro usuario
+    for uid, info in usuarios.items():
+        if info['nombre'] == nombre:
+            return jsonify({"error": f"{nombre} ya tiene una cuenta registrada."}), 400
+
+    usuarios[usuario_id] = {
+        "nombre": nombre,
+        "hash": hash_password(clave),
+        "creado": datetime.now().isoformat()
+    }
+    guardar_usuarios(usuarios)
+
+    session['usuario_id'] = usuario_id
+    session['usuario_nombre'] = nombre
+
+    return jsonify({
+        "success": True,
+        "usuario_id": usuario_id,
+        "nombre": nombre,
+        "mensaje": f"✅ Cuenta creada. Bienvenido, {nombre}"
+    })
+
+
+@app.route('/api/auth/logout', methods=['POST'])
+def auth_logout():
+    session.clear()
+    return jsonify({"success": True})
+
+
+@app.route('/api/auth/cambiar-clave', methods=['POST'])
+@login_requerido
+def auth_cambiar_clave():
+    data = request.json or {}
+    clave_actual = data.get('clave_actual', '').strip()
+    clave_nueva = data.get('clave_nueva', '').strip()
+    clave_confirm = data.get('clave_confirm', '').strip()
+
+    if not all([clave_actual, clave_nueva, clave_confirm]):
+        return jsonify({"error": "Completá todos los campos"}), 400
+    if len(clave_nueva) < 4:
+        return jsonify({"error": "La nueva contraseña debe tener al menos 4 caracteres"}), 400
+    if clave_nueva != clave_confirm:
+        return jsonify({"error": "Las contraseñas nuevas no coinciden"}), 400
+
+    uid = session['usuario_id']
+    usuarios = cargar_usuarios()
+
+    if usuarios[uid]['hash'] != hash_password(clave_actual):
+        return jsonify({"error": "Contraseña actual incorrecta"}), 401
+
+    usuarios[uid]['hash'] = hash_password(clave_nueva)
+    usuarios[uid]['modificado'] = datetime.now().isoformat()
+    guardar_usuarios(usuarios)
+
+    return jsonify({"success": True, "mensaje": "✅ Contraseña actualizada"})
+
+
+# ============================================================================
 # ENDPOINTS API
 # ============================================================================
 
@@ -891,20 +1068,28 @@ def get_mes(mes):
 
 
 @app.route('/api/asignar', methods=['POST'])
+@login_requerido
 def asignar_guardia():
-    """Asignar guardia con validación de disponibilidad"""
+    """Asignar guardia con validación de disponibilidad y permisos"""
     try:
         data = request.json
         mes = data.get('mes')
         dia = data.get('dia')
         persona = data.get('persona')
-        forzar = data.get('forzar', False)  # Permitir forzar asignación
-        
+        forzar = data.get('forzar', False)
+
         if not all([mes, dia, persona]):
             return jsonify({"error": "Faltan parámetros"}), 400
-        
+
         if mes not in MESES or persona not in PERSONAS:
             return jsonify({"error": "Mes o persona no válidos"}), 400
+
+        # CONTROL DE PERMISOS: solo puede asignarse a sí mismo
+        if not puede_modificar_persona(persona):
+            return jsonify({
+                "error": "sin_permiso",
+                "mensaje": f"Solo podés asignarte a vos mismo ({session.get('usuario_nombre')})"
+            }), 403
         
         # Construir fecha y validar disponibilidad
         mes_num = MAP_MESES[mes]
@@ -957,6 +1142,7 @@ def asignar_guardia():
             "dia": dia,
             "antes": persona_anterior,
             "despues": persona,
+            "por": session.get('usuario_nombre', 'desconocido'),
             "forzado": forzar and not persona_disponible(persona, fecha_str)
         })
         
@@ -1134,8 +1320,9 @@ def get_historial():
 
 
 @app.route('/api/eliminar', methods=['POST'])
+@login_requerido
 def eliminar_guardia():
-    """Elimina una guardia asignada"""
+    """Elimina una guardia asignada (solo la propia)"""
     try:
         data = request.json
         mes = data.get('mes')
@@ -1175,6 +1362,14 @@ def eliminar_guardia():
         if not persona_anterior:
             wb.close()
             return jsonify({"error": "No hay guardia asignada para eliminar"}), 400
+
+        # CONTROL DE PERMISOS: solo puede eliminar su propia guardia
+        if not puede_modificar_persona(persona_anterior):
+            wb.close()
+            return jsonify({
+                "error": "sin_permiso",
+                "mensaje": f"Solo podés eliminar tus propias guardias ({session.get('usuario_nombre')})"
+            }), 403
         
         # Eliminar (vaciar celda)
         hoja[celda_ref] = None
